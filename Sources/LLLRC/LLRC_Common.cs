@@ -86,6 +86,40 @@ namespace LLLRC
             @"/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PUBLIC DECLARATIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
         };
 
+        internal static List<string> ALLOWED_RANGE_VALUES_PRIMITIVE = new List<string>()
+        {
+            "Positive",
+            "Full range"
+        };
+
+        internal static List<string> ALLOWED_RANGE_VALUES_POINTER = new List<string>()
+        {
+            "Not NULL",
+        };
+
+        internal enum FILE_TYPE
+        {
+            UNDEFINED,
+            SOURCE,
+            HEADER
+        };
+
+        internal enum SPECIAL_END_FINDS
+        {
+            NONE,
+            END_OF_FUNCTION
+        };
+
+        internal enum ALLOWED_FIX_ITEMS
+        {
+            NOT_ALLOWED,
+            SPACES,
+            TABS,
+            FUNCTION_NAME,
+            SOURCE_STRUCTURE,
+            HEADER_STRUCTURE,
+        };
+
 
     }
 }

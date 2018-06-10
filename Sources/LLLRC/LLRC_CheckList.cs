@@ -30,6 +30,10 @@ namespace LLLRC
 
         // Global verbs list
         List<string> _globalVerbInfo;
+
+        // Struct verbs list
+        List<string> _structVerbInfo;
+
         public LLRC_CheckList()
         {
             appWord = new Microsoft.Office.Interop.Word.Application();
@@ -40,6 +44,7 @@ namespace LLLRC
 
             _tempList = new List<string>();
             _globalVerbInfo = new List<string>();
+            _structVerbInfo = new List<string>();
         }
         #endregion
 
@@ -102,6 +107,8 @@ namespace LLLRC
                                                             ref nullArgmnt, ref nullArgmnt, ref nullArgmnt);
         }
 
+
+
         #endregion
 
         #region Check spaces
@@ -141,6 +148,95 @@ namespace LLLRC
 
         #region Check Tabs
 
+        internal List<string> CheckTabs(string _filePath)
+        {
+            // First get range of code that don`t contain any header type
+            _res.Clear();
+            _stream = File.ReadAllLines(_filePath);
+            _startHeaderIdx.Clear(); _endHeaderIdx.Clear();
+            int tabIndex = 0;
+            GetLineIdx(_stream, "{", "}", LLRC_Common.SPECIAL_END_FINDS.END_OF_FUNCTION);
+
+            // Remove duplicate from list
+            _startHeaderIdx = _startHeaderIdx.Distinct().ToList();
+            _endHeaderIdx = _endHeaderIdx.Distinct().ToList();
+
+            // Now check Tabs for all possible ranges
+            try
+            {
+                for (int idx = 0; idx < Math.Min(_startHeaderIdx.Count, _endHeaderIdx.Count); idx++)
+                {
+                    CheckTabsSpace(_stream, _startHeaderIdx[idx], _endHeaderIdx[idx], 1);
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Something wrong with 1 or more of function header");
+            }
+
+            return _res;
+        }
+
+        private void CheckTabsSpace(string[] _stream, int startPos, int stopPos, int tabIndex)
+        {
+            int tabPosIndx = 1;
+            for (int rowIdx = startPos + 1; rowIdx < stopPos; rowIdx++)
+            {
+                MatchCollection matches = Regex.Matches(_stream[rowIdx], "(\\s+)");
+                int[] spaceArray = matches.OfType<Match>().Select(m => m.Length).ToArray();
+
+                if (spaceArray.Length == 0) // If there is nothing writing in row skip row.
+                {
+                    return;
+                }
+                else
+                {
+                    if(rowIdx == 447)
+                    {
+                        int a = 7;
+                    }
+                    if (true == _stream[rowIdx].Contains("{"))
+                    {
+                        tabPosIndx++;
+                        continue;
+                    }
+                    if (true == _stream[rowIdx].Contains("("))
+                    {
+                        tabPosIndx++;
+                        continue;
+                    }
+                    if (true == _stream[rowIdx].Contains("case:"))
+                    {
+                        tabPosIndx++;
+                        continue;
+                    }
+                    if (true == _stream[rowIdx].Contains("}"))
+                    {
+                        tabPosIndx--;
+                        continue;
+                    }
+                    if (true == _stream[rowIdx].Contains("break;"))
+                    {
+                        tabPosIndx--;
+                        continue;
+                    }
+                    if (true == _stream[rowIdx].Contains(")"))
+                    {
+                        tabPosIndx++;
+                        continue;
+                    }
+
+                    if (true == _stream[rowIdx].Contains("#"))
+                    {
+                        continue;
+                    }
+                    if (spaceArray[0] != (4 * tabPosIndx))
+                    {
+                        _res.Add(string.Format("Tab error. Pos: {0}, Tab: {1}, Row: {2}" + Environment.NewLine, rowIdx + 1, 4 * tabPosIndx, _stream[rowIdx]));
+                    }
+                }
+            }
+        }
         #endregion
 
         #region Check not use in Elbit types
@@ -160,7 +256,7 @@ namespace LLLRC
                     {
                         if (true == word.Equals(item))
                         {
-                            _res.Add("Pos: " + idx + Environment.NewLine + " line: " + _stream[idx]);
+                            _res.Add(string.Format("Pos: {0} \n Line: {1}",idx + 1, _stream[idx]));
                         }
                     }
                 }
@@ -230,10 +326,11 @@ namespace LLLRC
         internal List<string> CheckStructHeader(string _filePath)
         {
             _res.Clear();
+            _structVerbInfo.Clear();
             _stream = File.ReadAllLines(_filePath);
             _startHeaderIdx.Clear(); _endHeaderIdx.Clear();
 
-            HeaderGetIdx(_stream, "$STRUCTURES$", "/*--");
+            GetLineIdx(_stream, "$STRUCTURES$", "/*--", LLRC_Common.SPECIAL_END_FINDS.NONE);
 
             string moduleName = Path.GetFileName(_filePath).Split('_')[0];
 
@@ -244,8 +341,12 @@ namespace LLLRC
                     CheckInGroupKey(_stream, _startHeaderIdx[idx], _endHeaderIdx[idx], moduleName);
 
                     _globalVerbInfo.Clear();
-                    GetGlobalVerbsInfo(_stream, _endHeaderIdx[idx] + 1);
-                    CheckHeaderFields(_stream, "Structure", LLRC_Common.STRUCTURE_FIELDS,_startHeaderIdx[idx], _endHeaderIdx[idx]);
+                    CheckHeaderFields(_stream, "Structure", LLRC_Common.STRUCTURE_FIELDS, _startHeaderIdx[idx], _endHeaderIdx[idx]);
+
+                    GetStrcutVerbsInfo(_stream, _endHeaderIdx[idx] + 1);
+                    CheckStructMatch(_stream, _startHeaderIdx[idx], _endHeaderIdx[idx]);
+
+
                 }
             }
             catch (Exception)
@@ -253,6 +354,67 @@ namespace LLLRC
                 Console.WriteLine("Something wrong with 1 or more of function header");
             }
             return _res;
+        }
+
+        private void CheckStructMatch(string[] _stream, int startPos, int stopPos)
+        {
+            string tempStr = string.Empty;
+            int linePos = startPos;
+
+            for (int idx = startPos; idx < stopPos; idx++)
+            {
+                if (true == _stream[idx].Contains("Members Types:"))
+                {
+                    while (false == _stream[idx].Contains("Members Names:"))
+                    {
+                        tempStr += _stream[idx];
+                        idx++;
+                    }
+                    break;
+                }
+            }
+
+            var headerContent = tempStr.Replace(" ", string.Empty).Split(':')[1].Split('|');
+            var verbsContent = _structVerbInfo[1].Replace(" ", string.Empty).Split(',');
+
+            if(headerContent.Length != verbsContent.Length)
+            {
+                _res.Add(string.Format("Strcut. Number of types in header and veriable don`t match. Type: "));
+                return;
+            }
+
+            for (int idx = 0; idx < verbsContent.Length; idx++)
+            {
+                if(headerContent[idx] != verbsContent[idx])
+                {
+                    _res.Add(string.Format("Strcut. Type dont match. Type: {0}", headerContent[idx]));
+                }
+            }
+        }
+
+        private void GetStrcutVerbsInfo(string[] _stream, int startPosLines)
+        {
+            int linePos = startPosLines;
+
+            string tmpStr = string.Empty;
+            string veriableTypes = string.Empty;
+            string veriableNames = string.Empty;
+
+            _structVerbInfo.Add(_stream[linePos++]);
+
+            while(false == _stream[linePos].Contains("}"))
+            {
+                if (false == _stream[linePos].Contains("{"))
+                {
+                    veriableTypes += _stream[linePos].Split()[2] + ", ";
+                    veriableNames += _stream[linePos].Split()[3].Split(';')[0] + ", ";
+                }
+
+                linePos++;
+            }
+            _structVerbInfo.Add(veriableTypes);
+            _structVerbInfo.Add(veriableNames);
+            _structVerbInfo.Add(_stream[linePos].Split('}')[1].Split(';')[0]);
         }
         #endregion
 
@@ -262,7 +424,7 @@ namespace LLLRC
             _stream = File.ReadAllLines(_filePath);
             _startHeaderIdx.Clear(); _endHeaderIdx.Clear();
 
-            HeaderGetIdx(_stream, "$DEFINES$", "/*--");
+            GetLineIdx(_stream, "$DEFINES$", "/*--", LLRC_Common.SPECIAL_END_FINDS.NONE);
 
             string moduleName = Path.GetFileName(_filePath).Split('_')[0];
 
@@ -298,7 +460,7 @@ namespace LLLRC
 
 
             string moduleName = Path.GetFileName(_filePath).Split('_')[0];
-            HeaderGetIdx(_stream, "$PROCEDURE$", "/*--");
+            GetLineIdx(_stream, "$PROCEDURE$", "/*--", LLRC_Common.SPECIAL_END_FINDS.NONE);
 
             try
             {
@@ -320,17 +482,49 @@ namespace LLLRC
             return _res;
         }
 
-        private int CheckParamKey(string[] _stream, int startLine, int stopLine)
+        private void CheckParamKey(string[] _stream, int startLine, int stopLine)
         {
-            int issuePos = 0;
+            string paramWord = string.Empty;
+            bool foundFlag = false;
             for (int idx = startLine; idx < stopLine; idx++)
             {
                 if (_stream[idx].Contains("range:"))
                 {
-                    _res.Add(string.Format("range issue, Line pos: {0}", idx + 1));
+                    foundFlag = false;
+                    paramWord = _stream[idx].Split(':')[1].Split('.')[0].Trim();
+
+                    if (true == _stream[idx - 1].Contains("*"))  // Check if veriable is pointer
+                    {
+                        foreach (var avbRange in LLRC_Common.ALLOWED_RANGE_VALUES_POINTER)
+                        {
+                            if(avbRange == paramWord)
+                            {
+                                foundFlag = true;
+                                break;
+                            }
+                        }   
+                    }
+                    else if (true == _stream[idx].Contains("["))
+                    {
+                        foundFlag = true;
+                    }
+                    else
+                    {
+                        foreach (var avbRange in LLRC_Common.ALLOWED_RANGE_VALUES_PRIMITIVE)
+                        {
+                            if (avbRange == paramWord)
+                            {
+                                foundFlag = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (false == foundFlag)
+                    {
+                        _res.Add(string.Format("range issue, Line pos: {0}", idx + 1));
+                    }
                 }
             }
-            return issuePos;
         }
 
         private void CheckInGroupKey(string[] _stream, int startLine, int stopLine, string moduleName)
@@ -343,6 +537,7 @@ namespace LLLRC
                     {
                         _res.Add(string.Format("ingroup issue, Line pos: {0}", idx + 1));
                     }
+                    break;
                 }
             }
         }
@@ -387,7 +582,7 @@ namespace LLLRC
             _stream = File.ReadAllLines(_filePath);
             _startHeaderIdx.Clear(); _endHeaderIdx.Clear();
 
-            HeaderGetIdx(_stream, "$GLOBAL VARIABLES$", "/*--");
+            GetLineIdx(_stream, "$GLOBAL VARIABLES$", "/*--", LLRC_Common.SPECIAL_END_FINDS.NONE);
 
             string moduleName = Path.GetFileName(_filePath).Split('_')[0];
 
@@ -483,24 +678,43 @@ namespace LLLRC
 
         #region Common Checker utils
 
-        private void HeaderGetIdx(string[] _Stream, string firsHeaderLineKey, string lastHeaderLineKey)
+        private void GetLineIdx(string[] _Stream, string firsHeaderLineKey, string lastHeaderLineKey, LLRC_Common.SPECIAL_END_FINDS cSpEnd)
         {
-            for (int idx = 0; idx < _stream.Length; idx++)
+            int idx = 0;
+
+            for (idx = 0; idx < _stream.Length; idx++)
             {
+                if(idx == 756)
+                {
+                    int a = 7;
+                }
                 if (_stream[idx].Contains(firsHeaderLineKey ))
                 {
                     _startHeaderIdx.Add(idx);
 
-                    for (int idxLast = idx; idxLast < Math.Min(idx + 20, _Stream.Length); idxLast++)
+                    for (; idx < Math.Min(idx + 20, _Stream.Length); idx++)
                     {
-                        if (_stream[idxLast].Contains(lastHeaderLineKey))
+                        if(cSpEnd == LLRC_Common.SPECIAL_END_FINDS.END_OF_FUNCTION)
                         {
-                            _endHeaderIdx.Add(idxLast);
+                            MatchCollection matches = Regex.Matches(_stream[idx], "(\\s+)");
+                            int[] spaceArray = matches.OfType<Match>().Select(m => m.Length).ToArray();
+
+                            if ((true == _stream[idx].Contains(lastHeaderLineKey)) && (spaceArray.Length == 0))
+                            {
+                                _endHeaderIdx.Add(idx);
+                                break;
+                            }
+                        }
+                        else if (_stream[idx].Contains(lastHeaderLineKey))
+                        {
+                            _endHeaderIdx.Add(idx);
+                            break;
                         }
                     }
                 }
             }
         }
+
 
         private void CheckHeaderFields(string[] _stream, string moduleType, List<string> listOfKeys, int startPos, int stopPos)
         {

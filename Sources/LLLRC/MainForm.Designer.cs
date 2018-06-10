@@ -36,8 +36,9 @@
             this.lblNumRes = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.rtbResDisplay = new System.Windows.Forms.RichTextBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.gbxCheckItems = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.rdbCheckDefineHeader = new System.Windows.Forms.RadioButton();
             this.rdbCheckHeaderStructure = new System.Windows.Forms.RadioButton();
             this.label7 = new System.Windows.Forms.Label();
             this.rdbCheckGlobal = new System.Windows.Forms.RadioButton();
@@ -52,7 +53,6 @@
             this.rdbCheckElbitTypes = new System.Windows.Forms.RadioButton();
             this.rdbCheckStructHeader = new System.Windows.Forms.RadioButton();
             this.rdbCheckFunctionNames = new System.Windows.Forms.RadioButton();
-            this.btnCheckSubject = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lblFileDate = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -64,12 +64,13 @@
             this.ofdOpenFile = new System.Windows.Forms.OpenFileDialog();
             this.label4 = new System.Windows.Forms.Label();
             this.lblAppStatus = new System.Windows.Forms.Label();
-            this.rdbCheckDefineHeader = new System.Windows.Forms.RadioButton();
+            this.btnFixObject = new System.Windows.Forms.Button();
+            this.btnCheckSubject = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox4.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            this.gbxCheckItems.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -99,7 +100,7 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.groupBox4);
-            this.groupBox2.Controls.Add(this.groupBox3);
+            this.groupBox2.Controls.Add(this.gbxCheckItems);
             this.groupBox2.Location = new System.Drawing.Point(3, 94);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(679, 430);
@@ -158,19 +159,20 @@
             this.rtbResDisplay.TabIndex = 0;
             this.rtbResDisplay.Text = "";
             // 
-            // groupBox3
+            // gbxCheckItems
             // 
-            this.groupBox3.Controls.Add(this.groupBox5);
-            this.groupBox3.Controls.Add(this.btnCheckSubject);
-            this.groupBox3.Location = new System.Drawing.Point(0, 19);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(130, 405);
-            this.groupBox3.TabIndex = 0;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Subjects";
+            this.gbxCheckItems.Controls.Add(this.groupBox5);
+            this.gbxCheckItems.Location = new System.Drawing.Point(0, 19);
+            this.gbxCheckItems.Name = "gbxCheckItems";
+            this.gbxCheckItems.Size = new System.Drawing.Size(130, 405);
+            this.gbxCheckItems.TabIndex = 0;
+            this.gbxCheckItems.TabStop = false;
+            this.gbxCheckItems.Text = "Subjects";
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.btnFixObject);
+            this.groupBox5.Controls.Add(this.btnCheckSubject);
             this.groupBox5.Controls.Add(this.rdbCheckDefineHeader);
             this.groupBox5.Controls.Add(this.rdbCheckHeaderStructure);
             this.groupBox5.Controls.Add(this.label7);
@@ -189,10 +191,21 @@
             this.groupBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox5.Location = new System.Drawing.Point(3, 19);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(121, 342);
+            this.groupBox5.Size = new System.Drawing.Size(121, 386);
             this.groupBox5.TabIndex = 7;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "General and common";
+            // 
+            // rdbCheckDefineHeader
+            // 
+            this.rdbCheckDefineHeader.AutoSize = true;
+            this.rdbCheckDefineHeader.Location = new System.Drawing.Point(7, 172);
+            this.rdbCheckDefineHeader.Name = "rdbCheckDefineHeader";
+            this.rdbCheckDefineHeader.Size = new System.Drawing.Size(80, 16);
+            this.rdbCheckDefineHeader.TabIndex = 16;
+            this.rdbCheckDefineHeader.TabStop = true;
+            this.rdbCheckDefineHeader.Text = "Define header";
+            this.rdbCheckDefineHeader.UseVisualStyleBackColor = true;
             // 
             // rdbCheckHeaderStructure
             // 
@@ -346,17 +359,6 @@
             this.rdbCheckFunctionNames.Text = "Function names";
             this.rdbCheckFunctionNames.UseVisualStyleBackColor = true;
             // 
-            // btnCheckSubject
-            // 
-            this.btnCheckSubject.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCheckSubject.Location = new System.Drawing.Point(23, 376);
-            this.btnCheckSubject.Name = "btnCheckSubject";
-            this.btnCheckSubject.Size = new System.Drawing.Size(75, 23);
-            this.btnCheckSubject.TabIndex = 6;
-            this.btnCheckSubject.Text = "Check";
-            this.btnCheckSubject.UseVisualStyleBackColor = true;
-            this.btnCheckSubject.Click += new System.EventHandler(this.btnCheckSubject_Click);
-            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.lblFileDate);
@@ -434,7 +436,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(493, 507);
+            this.tabPage2.Size = new System.Drawing.Size(688, 530);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "File viewer";
             // 
@@ -461,16 +463,27 @@
             this.lblAppStatus.TabIndex = 2;
             this.lblAppStatus.Text = ".";
             // 
-            // rdbCheckDefineHeader
+            // btnFixObject
             // 
-            this.rdbCheckDefineHeader.AutoSize = true;
-            this.rdbCheckDefineHeader.Location = new System.Drawing.Point(7, 172);
-            this.rdbCheckDefineHeader.Name = "rdbCheckDefineHeader";
-            this.rdbCheckDefineHeader.Size = new System.Drawing.Size(80, 16);
-            this.rdbCheckDefineHeader.TabIndex = 16;
-            this.rdbCheckDefineHeader.TabStop = true;
-            this.rdbCheckDefineHeader.Text = "Define header";
-            this.rdbCheckDefineHeader.UseVisualStyleBackColor = true;
+            this.btnFixObject.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFixObject.Location = new System.Drawing.Point(65, 357);
+            this.btnFixObject.Name = "btnFixObject";
+            this.btnFixObject.Size = new System.Drawing.Size(38, 23);
+            this.btnFixObject.TabIndex = 18;
+            this.btnFixObject.Text = "Fix";
+            this.btnFixObject.UseVisualStyleBackColor = true;
+            this.btnFixObject.Click += new System.EventHandler(this.btnFixObject_Click);
+            // 
+            // btnCheckSubject
+            // 
+            this.btnCheckSubject.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCheckSubject.Location = new System.Drawing.Point(7, 357);
+            this.btnCheckSubject.Name = "btnCheckSubject";
+            this.btnCheckSubject.Size = new System.Drawing.Size(49, 23);
+            this.btnCheckSubject.TabIndex = 17;
+            this.btnCheckSubject.Text = "Check";
+            this.btnCheckSubject.UseVisualStyleBackColor = true;
+            this.btnCheckSubject.Click += new System.EventHandler(this.btnCheckSubject_Click);
             // 
             // MainForm
             // 
@@ -480,6 +493,7 @@
             this.Controls.Add(this.lblAppStatus);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.tabControl1);
+            this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "LLR Checker";
             this.tabControl1.ResumeLayout(false);
@@ -487,7 +501,7 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
+            this.gbxCheckItems.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -503,8 +517,7 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Button btnCheckSubject;
+        private System.Windows.Forms.GroupBox gbxCheckItems;
         private System.Windows.Forms.RadioButton rdbCheckElbitTypes;
         private System.Windows.Forms.RadioButton rdbCheckTabs;
         private System.Windows.Forms.RadioButton rdbCheckGrammer;
@@ -536,6 +549,8 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.RadioButton rdbCheckDefineHeader;
+        private System.Windows.Forms.Button btnFixObject;
+        private System.Windows.Forms.Button btnCheckSubject;
     }
 }
 
