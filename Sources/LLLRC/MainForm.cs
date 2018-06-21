@@ -182,6 +182,10 @@ namespace LLLRC
                     case LLRC_Common.ALLOWED_FIX_ITEMS.TABS:
                         _fixItems.FixTabs(rtbResDisplay.Lines, _filePath);
                         break;
+
+                    case LLRC_Common.ALLOWED_FIX_ITEMS.SPACES:
+                        _fixItems.FixSpaces(rtbResDisplay.Lines, _filePath);
+                        break;
                 }
             }
         }

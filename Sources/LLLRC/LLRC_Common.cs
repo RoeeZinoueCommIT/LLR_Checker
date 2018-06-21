@@ -8,7 +8,7 @@ namespace LLLRC
 {
     class LLRC_Common
     {
-        internal static int ALLOWED_BIG_SPACE_NUM = 4;
+        internal static int ALLOWED_BIG_SPACE_NUM = 2;
 
         internal static List<string> UNSUPPORT_ELBIT_TYPES = new List<string>()
         {
@@ -96,6 +96,8 @@ namespace LLLRC
         {
             "Not NULL",
         };
+
+        internal static string SPACE_STR_KEY_WORD = "Str_val:";
 
         internal enum FILE_TYPE
         {

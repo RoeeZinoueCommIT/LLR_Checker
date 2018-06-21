@@ -8,3 +8,13 @@ C:\Software_projects\Elbit\MISRA\LLLRC\LLLRC\obj\Debug\LLLRC.csproj.GenerateReso
 C:\Software_projects\Elbit\MISRA\LLLRC\LLLRC\obj\Debug\LLLRC.exe
 C:\Software_projects\Elbit\MISRA\LLLRC\LLLRC\obj\Debug\LLLRC.pdb
 C:\Software_projects\Elbit\MISRA\LLLRC\LLLRC\obj\Debug\LLLRC.csproj.ResolveComReference.cache
+C:\Software_projects\Elbit\MISRA\LLR_Checker\Sources\LLLRC\bin\Debug\LLLRC.exe.config
+C:\Software_projects\Elbit\MISRA\LLR_Checker\Sources\LLLRC\obj\Debug\LLLRC.csproj.ResolveComReference.cache
+C:\Software_projects\Elbit\MISRA\LLR_Checker\Sources\LLLRC\obj\Debug\LLLRC.exe
+C:\Software_projects\Elbit\MISRA\LLR_Checker\Sources\LLLRC\obj\Debug\LLLRC.pdb
+C:\Software_projects\Elbit\MISRA\LLR_Checker\Sources\LLLRC\bin\Debug\LLLRC.exe
+C:\Software_projects\Elbit\MISRA\LLR_Checker\Sources\LLLRC\bin\Debug\LLLRC.pdb
+C:\Software_projects\Elbit\MISRA\LLR_Checker\Sources\LLLRC\obj\Debug\LLLRC.csprojResolveAssemblyReference.cache
+C:\Software_projects\Elbit\MISRA\LLR_Checker\Sources\LLLRC\obj\Debug\LLLRC.MainForm.resources
+C:\Software_projects\Elbit\MISRA\LLR_Checker\Sources\LLLRC\obj\Debug\LLLRC.Properties.Resources.resources
+C:\Software_projects\Elbit\MISRA\LLR_Checker\Sources\LLLRC\obj\Debug\LLLRC.csproj.GenerateResource.Cache

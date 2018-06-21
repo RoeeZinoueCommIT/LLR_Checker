@@ -116,33 +116,33 @@ namespace LLLRC
         internal List<string> CheckSpaces(string _filePath)
         {
             _res.Clear();
-
             _stream = File.ReadAllLines(_filePath);
+            int spacePos = 0;
 
             for (int idx = 0; idx < _stream.Length; idx++)
             {
                 MatchCollection matches = Regex.Matches(_stream[idx], "(\\s+)");
                 int[] spaceArray = matches.OfType<Match>().Select(m => m.Length).ToArray();
 
-                if (false == CheckSpaces(spaceArray))
+                spacePos = CheckSpaces(spaceArray);
+                if (spacePos >= 0 )
                 {
-                    _res.Add("Line: " + idx + Environment.NewLine + " string: " + _stream[idx]);
+                    _res.Add(string.Format("Line: {0}" + Environment.NewLine + "Pos: {1}" + Environment.NewLine + LLRC_Common.SPACE_STR_KEY_WORD + "{2}" + Environment.NewLine, idx + 1, spacePos, _stream[idx]));
                 }
-
             }
             return _res;
         }
 
-        private bool CheckSpaces(int[] spaceArray)
+        private int CheckSpaces(int[] spaceArray)
         {
             for (int idx = 1; idx < spaceArray.Length; idx++)
             {
-                if (spaceArray[idx] > 1 && spaceArray[idx] < LLRC_Common.ALLOWED_BIG_SPACE_NUM)
+                if (spaceArray[idx] > 1)
                 {
-                    return false;
+                    return idx;
                 }
             }
-            return true;
+            return -1;
         }
         #endregion
 
@@ -180,60 +180,95 @@ namespace LLLRC
         private void CheckTabsSpace(string[] _stream, int startPos, int stopPos, int tabIndex)
         {
             int tabPosIndx = 1;
+            bool rowSignFlagPos = false, rowSignFlagNeg = false;
+            string lastLine = string.Empty;
             for (int rowIdx = startPos + 1; rowIdx < stopPos; rowIdx++)
             {
+                rowSignFlagPos = false;
+                rowSignFlagNeg = false;
                 MatchCollection matches = Regex.Matches(_stream[rowIdx], "(\\s+)");
                 int[] spaceArray = matches.OfType<Match>().Select(m => m.Length).ToArray();
 
                 if (spaceArray.Length == 0) // If there is nothing writing in row skip row.
                 {
-                    return;
+                    continue;
                 }
                 else
                 {
-                    if(rowIdx == 447)
+                    
+                    if (rowIdx == 774)
                     {
-                        int a = 7;
+                        int a = 0x7;
                     }
                     if (true == _stream[rowIdx].Contains("{"))
                     {
                         tabPosIndx++;
-                        continue;
+                        rowSignFlagPos = true;
                     }
-                    if (true == _stream[rowIdx].Contains("("))
+                    if ((true == _stream[rowIdx].Contains("case")))
                     {
                         tabPosIndx++;
-                        continue;
+                        rowSignFlagPos = true;
                     }
-                    if (true == _stream[rowIdx].Contains("case:"))
+                    if (true == _stream[rowIdx].Contains("default"))
                     {
-                        tabPosIndx++;
-                        continue;
+                        if((false == lastLine.Contains("break;")))
+                        {
+                            //tabPosIndx--;
+                            rowSignFlagPos = true;
+                        }
+                        else
+                        {
+                            tabPosIndx++;
+                        }
+                        
                     }
-                    if (true == _stream[rowIdx].Contains("}"))
+                    if ((true == _stream[rowIdx].Contains("}")))
+                    {
+                        if((false == lastLine.Contains("break;")))
+                        {
+                            tabPosIndx--;
+                        }
+                        
+                    }
+                    if ((true == _stream[rowIdx].Contains("break;")))
                     {
                         tabPosIndx--;
-                        continue;
+                        rowSignFlagNeg = true;
                     }
-                    if (true == _stream[rowIdx].Contains("break;"))
-                    {
-                        tabPosIndx--;
-                        continue;
-                    }
-                    if (true == _stream[rowIdx].Contains(")"))
-                    {
-                        tabPosIndx++;
-                        continue;
-                    }
-
                     if (true == _stream[rowIdx].Contains("#"))
                     {
                         continue;
                     }
-                    if (spaceArray[0] != (4 * tabPosIndx))
+
+                    // Check tabs positions
+                    if ((false == rowSignFlagPos) && (false == rowSignFlagNeg))
                     {
-                        _res.Add(string.Format("Tab error. Pos: {0}, Tab: {1}, Row: {2}" + Environment.NewLine, rowIdx + 1, 4 * tabPosIndx, _stream[rowIdx]));
+                        if (spaceArray[0] != (4 * tabPosIndx))
+                        {
+                            _res.Add(string.Format("Tab error. Pos: {0}, Tab: {1}, Row: {2}" + Environment.NewLine, rowIdx + 1, 4 * tabPosIndx, _stream[rowIdx].Trim()));
+                        }
                     }
+                    else
+                    {
+                        if (rowSignFlagNeg == true)
+                        {
+                            if (spaceArray[0] != (4 * (tabPosIndx + 1)))
+                            {
+                                _res.Add(string.Format("Tab error. Pos: {0}, Tab: {1}, Row: {2}" + Environment.NewLine, rowIdx + 1, 4 * (tabPosIndx + 1), _stream[rowIdx].Trim()));
+                            }
+                        }
+                        else
+                        {
+                            if (spaceArray[0] != (4 * (tabPosIndx - 1)))
+                            {
+                                _res.Add(string.Format("Tab error. Pos: {0}, Tab: {1}, Row: {2}" + Environment.NewLine, rowIdx + 1, 4 * (tabPosIndx - 1), _stream[rowIdx]));
+                            }
+                        }
+                    }
+                    lastLine = _stream[rowIdx];
+
+
                 }
             }
         }
@@ -738,8 +773,5 @@ namespace LLLRC
             }
         }
         #endregion
-
-
-
     }
 }
