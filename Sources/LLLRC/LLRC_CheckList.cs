@@ -960,5 +960,20 @@ namespace LLLRC
             }
         }
         #endregion
+
+        #region Read file
+
+        internal List<string> ViewFile(string _filePath)
+        {
+            _res.Clear();
+            _stream = File.ReadAllLines(_filePath);
+
+            for (int idx = 0; idx < _stream.Length; idx++)
+            {
+                _res.Add(string.Format("{0}:{1}", idx + 1, _stream[idx]));
+            }
+            return (_res);
+        }
+        #endregion
     }
 }

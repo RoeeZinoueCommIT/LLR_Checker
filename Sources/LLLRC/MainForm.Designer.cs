@@ -38,6 +38,7 @@
             this.rtbResDisplay = new System.Windows.Forms.RichTextBox();
             this.gbxCheckItems = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.rdbCheckGrammerDifrenences = new System.Windows.Forms.RadioButton();
             this.btnFixObject = new System.Windows.Forms.Button();
             this.btnCheckSubject = new System.Windows.Forms.Button();
             this.rdbCheckDefineHeader = new System.Windows.Forms.RadioButton();
@@ -63,10 +64,17 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnOpenFile = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.btnViewFileClear = new System.Windows.Forms.Button();
+            this.btnViewFile = new System.Windows.Forms.Button();
+            this.gbxViewFile = new System.Windows.Forms.GroupBox();
             this.ofdOpenFile = new System.Windows.Forms.OpenFileDialog();
             this.label4 = new System.Windows.Forms.Label();
             this.lblAppStatus = new System.Windows.Forms.Label();
-            this.rdbCheckGrammerDifrenences = new System.Windows.Forms.RadioButton();
+            this.rtbViewFile = new System.Windows.Forms.RichTextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.tbxFindKey = new System.Windows.Forms.TextBox();
+            this.btnFileViewFind = new System.Windows.Forms.Button();
+            this.btnFindKeyClear = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -74,6 +82,8 @@
             this.gbxCheckItems.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.gbxViewFile.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -83,7 +93,7 @@
             this.tabControl1.Location = new System.Drawing.Point(1, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(735, 584);
+            this.tabControl1.Size = new System.Drawing.Size(880, 584);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -94,7 +104,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(727, 558);
+            this.tabPage1.Size = new System.Drawing.Size(872, 558);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Check File";
             // 
@@ -104,7 +114,7 @@
             this.groupBox2.Controls.Add(this.gbxCheckItems);
             this.groupBox2.Location = new System.Drawing.Point(3, 94);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(721, 458);
+            this.groupBox2.Size = new System.Drawing.Size(863, 458);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Check subjects";
@@ -117,7 +127,7 @@
             this.groupBox4.Controls.Add(this.rtbResDisplay);
             this.groupBox4.Location = new System.Drawing.Point(178, 19);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(537, 433);
+            this.groupBox4.Size = new System.Drawing.Size(679, 433);
             this.groupBox4.TabIndex = 1;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Results";
@@ -125,7 +135,7 @@
             // btnRtbResClear
             // 
             this.btnRtbResClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRtbResClear.Location = new System.Drawing.Point(456, 376);
+            this.btnRtbResClear.Location = new System.Drawing.Point(598, 376);
             this.btnRtbResClear.Name = "btnRtbResClear";
             this.btnRtbResClear.Size = new System.Drawing.Size(75, 23);
             this.btnRtbResClear.TabIndex = 3;
@@ -157,7 +167,7 @@
             this.rtbResDisplay.Location = new System.Drawing.Point(6, 66);
             this.rtbResDisplay.Name = "rtbResDisplay";
             this.rtbResDisplay.ReadOnly = true;
-            this.rtbResDisplay.Size = new System.Drawing.Size(525, 304);
+            this.rtbResDisplay.Size = new System.Drawing.Size(667, 304);
             this.rtbResDisplay.TabIndex = 0;
             this.rtbResDisplay.Text = "";
             // 
@@ -198,6 +208,17 @@
             this.groupBox5.TabIndex = 7;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "General and common";
+            // 
+            // rdbCheckGrammerDifrenences
+            // 
+            this.rdbCheckGrammerDifrenences.AutoSize = true;
+            this.rdbCheckGrammerDifrenences.Location = new System.Drawing.Point(6, 61);
+            this.rdbCheckGrammerDifrenences.Name = "rdbCheckGrammerDifrenences";
+            this.rdbCheckGrammerDifrenences.Size = new System.Drawing.Size(146, 16);
+            this.rdbCheckGrammerDifrenences.TabIndex = 19;
+            this.rdbCheckGrammerDifrenences.TabStop = true;
+            this.rdbCheckGrammerDifrenences.Text = "English grammer (differences)";
+            this.rdbCheckGrammerDifrenences.UseVisualStyleBackColor = true;
             // 
             // btnFixObject
             // 
@@ -394,7 +415,7 @@
             this.groupBox1.Controls.Add(this.btnOpenFile);
             this.groupBox1.Location = new System.Drawing.Point(3, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(721, 82);
+            this.groupBox1.Size = new System.Drawing.Size(863, 82);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Open file";
@@ -458,12 +479,51 @@
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPage2.Controls.Add(this.btnFindKeyClear);
+            this.tabPage2.Controls.Add(this.btnFileViewFind);
+            this.tabPage2.Controls.Add(this.tbxFindKey);
+            this.tabPage2.Controls.Add(this.label8);
+            this.tabPage2.Controls.Add(this.btnViewFileClear);
+            this.tabPage2.Controls.Add(this.btnViewFile);
+            this.tabPage2.Controls.Add(this.gbxViewFile);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(768, 530);
+            this.tabPage2.Size = new System.Drawing.Size(872, 558);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "File viewer";
+            // 
+            // btnViewFileClear
+            // 
+            this.btnViewFileClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnViewFileClear.Location = new System.Drawing.Point(738, 505);
+            this.btnViewFileClear.Name = "btnViewFileClear";
+            this.btnViewFileClear.Size = new System.Drawing.Size(122, 23);
+            this.btnViewFileClear.TabIndex = 2;
+            this.btnViewFileClear.Text = "Clear view file window";
+            this.btnViewFileClear.UseVisualStyleBackColor = true;
+            this.btnViewFileClear.Click += new System.EventHandler(this.btnViewFileClear_Click);
+            // 
+            // btnViewFile
+            // 
+            this.btnViewFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnViewFile.Location = new System.Drawing.Point(648, 505);
+            this.btnViewFile.Name = "btnViewFile";
+            this.btnViewFile.Size = new System.Drawing.Size(75, 23);
+            this.btnViewFile.TabIndex = 1;
+            this.btnViewFile.Text = "View file";
+            this.btnViewFile.UseVisualStyleBackColor = true;
+            this.btnViewFile.Click += new System.EventHandler(this.btnViewFile_Click);
+            // 
+            // gbxViewFile
+            // 
+            this.gbxViewFile.Controls.Add(this.rtbViewFile);
+            this.gbxViewFile.Location = new System.Drawing.Point(0, 3);
+            this.gbxViewFile.Name = "gbxViewFile";
+            this.gbxViewFile.Size = new System.Drawing.Size(866, 506);
+            this.gbxViewFile.TabIndex = 0;
+            this.gbxViewFile.TabStop = false;
+            this.gbxViewFile.Text = "View file";
             // 
             // ofdOpenFile
             // 
@@ -488,25 +548,63 @@
             this.lblAppStatus.TabIndex = 2;
             this.lblAppStatus.Text = ".";
             // 
-            // rdbCheckGrammerDifrenences
+            // rtbViewFile
             // 
-            this.rdbCheckGrammerDifrenences.AutoSize = true;
-            this.rdbCheckGrammerDifrenences.Location = new System.Drawing.Point(6, 61);
-            this.rdbCheckGrammerDifrenences.Name = "rdbCheckGrammerDifrenences";
-            this.rdbCheckGrammerDifrenences.Size = new System.Drawing.Size(146, 16);
-            this.rdbCheckGrammerDifrenences.TabIndex = 19;
-            this.rdbCheckGrammerDifrenences.TabStop = true;
-            this.rdbCheckGrammerDifrenences.Text = "English grammer (differences)";
-            this.rdbCheckGrammerDifrenences.UseVisualStyleBackColor = true;
+            this.rtbViewFile.BackColor = System.Drawing.Color.Gainsboro;
+            this.rtbViewFile.Location = new System.Drawing.Point(3, 19);
+            this.rtbViewFile.Name = "rtbViewFile";
+            this.rtbViewFile.ReadOnly = true;
+            this.rtbViewFile.Size = new System.Drawing.Size(857, 481);
+            this.rtbViewFile.TabIndex = 0;
+            this.rtbViewFile.Text = "";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(7, 515);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(36, 13);
+            this.label8.TabIndex = 3;
+            this.label8.Text = "Word:";
+            // 
+            // tbxFindKey
+            // 
+            this.tbxFindKey.Location = new System.Drawing.Point(43, 512);
+            this.tbxFindKey.Name = "tbxFindKey";
+            this.tbxFindKey.Size = new System.Drawing.Size(149, 20);
+            this.tbxFindKey.TabIndex = 4;
+            // 
+            // btnFileViewFind
+            // 
+            this.btnFileViewFind.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFileViewFind.Location = new System.Drawing.Point(215, 509);
+            this.btnFileViewFind.Name = "btnFileViewFind";
+            this.btnFileViewFind.Size = new System.Drawing.Size(75, 23);
+            this.btnFileViewFind.TabIndex = 5;
+            this.btnFileViewFind.Text = "Find";
+            this.btnFileViewFind.UseVisualStyleBackColor = true;
+            this.btnFileViewFind.Click += new System.EventHandler(this.btnFileViewFind_Click);
+            // 
+            // btnFindKeyClear
+            // 
+            this.btnFindKeyClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFindKeyClear.Location = new System.Drawing.Point(308, 509);
+            this.btnFindKeyClear.Name = "btnFindKeyClear";
+            this.btnFindKeyClear.Size = new System.Drawing.Size(75, 23);
+            this.btnFindKeyClear.TabIndex = 6;
+            this.btnFindKeyClear.Text = "Clear";
+            this.btnFindKeyClear.UseVisualStyleBackColor = true;
+            this.btnFindKeyClear.Click += new System.EventHandler(this.btnFindKeyClear_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(737, 611);
+            this.ClientSize = new System.Drawing.Size(885, 611);
             this.Controls.Add(this.lblAppStatus);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.tabControl1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "LLR Checker";
@@ -520,6 +618,9 @@
             this.groupBox5.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            this.gbxViewFile.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -566,6 +667,14 @@
         private System.Windows.Forms.Button btnFixObject;
         private System.Windows.Forms.Button btnCheckSubject;
         private System.Windows.Forms.RadioButton rdbCheckGrammerDifrenences;
+        private System.Windows.Forms.Button btnViewFileClear;
+        private System.Windows.Forms.Button btnViewFile;
+        private System.Windows.Forms.GroupBox gbxViewFile;
+        private System.Windows.Forms.RichTextBox rtbViewFile;
+        private System.Windows.Forms.Button btnFileViewFind;
+        private System.Windows.Forms.TextBox tbxFindKey;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button btnFindKeyClear;
     }
 }
 

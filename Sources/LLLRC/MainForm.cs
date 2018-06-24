@@ -25,13 +25,13 @@ namespace LLLRC
         LLRC_Common.FILE_TYPE cFileType = LLRC_Common.FILE_TYPE.UNDEFINED;
 
         // Fix items type
-        LLRC_FixItems _fixItems;
+        LLRC_FixItemsAndUtils _fixItems;
         LLRC_Common.ALLOWED_FIX_ITEMS cFixItem = LLRC_Common.ALLOWED_FIX_ITEMS.NOT_ALLOWED; 
         public MainForm()
         {
             InitializeComponent();
             _checkList = new LLRC_CheckList();
-            _fixItems = new LLRC_FixItems();
+            _fixItems = new LLRC_FixItemsAndUtils();
         }
         #endregion
 
@@ -199,6 +199,44 @@ namespace LLLRC
             InfraMessageOk(LLRC_Common.MSG_APP_OK_FINISH_ANALYZE_SUBJECT);
         }
         #endregion
+
+        private void btnViewFile_Click(object sender, EventArgs e)
+        {
+            rtbViewFile.Lines = _checkList.ViewFile(_filePath).ToArray();
+        }
+
+        private void btnViewFileClear_Click(object sender, EventArgs e)
+        {
+            rtbViewFile.Clear();
+        }
+
+        private void btnFileViewFind_Click(object sender, EventArgs e)
+        {
+            int len = rtbViewFile.TextLength;
+            int index = 0;
+            int lastIndex = rtbViewFile.Text.LastIndexOf(tbxFindKey.Text);
+
+            while (index < lastIndex)
+            {
+                rtbViewFile.Find(tbxFindKey.Text, index, len, RichTextBoxFinds.None);
+                rtbViewFile.SelectionBackColor = Color.Yellow;
+                index = rtbViewFile.Text.IndexOf(this.tbxFindKey.Text, index) + 1;
+            }
+        }
+
+        private void btnFindKeyClear_Click(object sender, EventArgs e)
+        {
+            int len = rtbViewFile.TextLength;
+            int index = 0;
+            int lastIndex = rtbViewFile.Text.LastIndexOf(tbxFindKey.Text);
+
+            while (index < lastIndex)
+            {
+                rtbViewFile.Find(tbxFindKey.Text, index, len, RichTextBoxFinds.None);
+                rtbViewFile.SelectionBackColor = Color.Gainsboro;
+                index = rtbViewFile.Text.IndexOf(this.tbxFindKey.Text, index) + 1;
+            }
+        }
     }
  }
 

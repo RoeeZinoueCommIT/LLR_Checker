@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LLLRC
 {
-    class LLRC_FixItems
+    class LLRC_FixItemsAndUtils
     {
         #region Class verbs and c`tor
 
