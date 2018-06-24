@@ -62,7 +62,7 @@ namespace LLLRC
         {
             lblFilePath.Text = Path.GetFileName(_filePath);
             lblFileDate.Text = File.GetLastAccessTime(_filePath).ToString();
-            InfraMessageOk("File Loaded OK");
+            InfraMessageOk(LLRC_Common.MSG_APP_OK_FILE_LOAD);
         }
 
         #endregion
@@ -80,6 +80,32 @@ namespace LLLRC
             lblAppStatus.ForeColor = Color.Red;
             lblAppStatus.Text = val;
         }
+
+        private void btnRtbResClear_Click(object sender, EventArgs e)
+        {
+            rtbResDisplay.Clear();
+        }
+
+        private void btnFixObject_Click(object sender, EventArgs e)
+        {
+            if (cFixItem == LLRC_Common.ALLOWED_FIX_ITEMS.NOT_ALLOWED)
+            {
+                InfraMessageFail(LLRC_Common.MSG_APP_FAIL_NOT_SELECT_VALID_SUBJECT);
+            }
+            else
+            {
+                switch (cFixItem)
+                {
+                    case LLRC_Common.ALLOWED_FIX_ITEMS.TABS:
+                        _fixItems.FixTabs(rtbResDisplay.Lines, _filePath);
+                        break;
+
+                    case LLRC_Common.ALLOWED_FIX_ITEMS.SPACES:
+                        _fixItems.FixSpaces(rtbResDisplay.Lines, _filePath);
+                        break;
+                }
+            }
+        }
         #endregion
 
         #region Check subjects
@@ -88,11 +114,12 @@ namespace LLLRC
         {
             if(cFileType == LLRC_Common.FILE_TYPE.UNDEFINED)
             {
-                InfraMessageFail("You must select valid file type (either *.c or *.h)");
+                InfraMessageFail(LLRC_Common.MSG_APP_FAIL_NOT_VALID_FILE_FORMAT);
                 return;
             }
 
             rtbResDisplay.Clear();
+            InfraMessageOk(LLRC_Common.MSG_APP_OK_CHECKING_ITEM);
             lblNumRes.Text = string.Empty;
             cFixItem = LLRC_Common.ALLOWED_FIX_ITEMS.NOT_ALLOWED;
 
@@ -103,9 +130,15 @@ namespace LLLRC
                 rtbResDisplay.Lines = _checkList.CheckSpaces(_filePath).ToArray();
                 cFixItem = LLRC_Common.ALLOWED_FIX_ITEMS.SPACES;
             }
-            else if (true == rdbCheckGrammer.Checked)
+            else if (true == rdbCheckGrammerLines.Checked)
             {
                 rtbResDisplay.Lines = _checkList.CheckGrammer(_filePath).ToArray();
+            }
+            else if (true == rdbCheckGrammerDifrenences.Checked)
+            {
+                rtbResDisplay.Lines = _checkList.CheckGrammer(_filePath).ToArray();
+                rtbResDisplay.Lines = _checkList.GrammerRemoveDifrances(rtbResDisplay.Lines).ToArray();
+
             }
             else if(true == rdbCheckElbitTypes.Checked)
             {
@@ -137,9 +170,8 @@ namespace LLLRC
                 }
                 else
                 {
-                    InfraMessageFail("File type for this options don`t supported");
-                }
-                
+                    InfraMessageFail(LLRC_Common.MSG_APP_FAIL_WRONG_SUBJECT_FOR_FILE_FORMAT);
+                }   
             }
             else if(true == rdbCheckSourceStructure.Checked)
             {
@@ -148,6 +180,10 @@ namespace LLLRC
             else if (true == rdbCheckGlobal.Checked)
             {
                 rtbResDisplay.Lines = _checkList.CheckGlobalHeader(_filePath).ToArray();
+            }
+            else if(true == rdbCheckFunctionNames.Checked)
+            {
+                rtbResDisplay.Lines = _checkList.CheckSourceFunctionNames(_filePath).ToArray();
             }
             #endregion
 
@@ -160,35 +196,9 @@ namespace LLLRC
             #endregion
 
             lblNumRes.Text = rtbResDisplay.Lines.Count().ToString();
-            InfraMessageOk("Operation done O.K");
+            InfraMessageOk(LLRC_Common.MSG_APP_OK_FINISH_ANALYZE_SUBJECT);
         }
         #endregion
-
-        private void btnRtbResClear_Click(object sender, EventArgs e)
-        {
-            rtbResDisplay.Clear();
-        }
-
-        private void btnFixObject_Click(object sender, EventArgs e)
-        {
-            if(cFixItem == LLRC_Common.ALLOWED_FIX_ITEMS.NOT_ALLOWED)
-            {
-                InfraMessageFail("Please choose avlivable fix item");
-            }
-            else
-            {
-                switch(cFixItem)
-                {
-                    case LLRC_Common.ALLOWED_FIX_ITEMS.TABS:
-                        _fixItems.FixTabs(rtbResDisplay.Lines, _filePath);
-                        break;
-
-                    case LLRC_Common.ALLOWED_FIX_ITEMS.SPACES:
-                        _fixItems.FixSpaces(rtbResDisplay.Lines, _filePath);
-                        break;
-                }
-            }
-        }
     }
  }
 

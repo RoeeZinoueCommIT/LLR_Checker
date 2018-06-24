@@ -23,7 +23,7 @@ namespace LLLRC
         Object nullArgmnt = null;
 
         // Function header checker
-        List<Int32> _startHeaderIdx, _endHeaderIdx;
+        List<Int32> _startHeaderIdx, _endHeaderIdx, _tempStartHeaderIdx, _tempEndHeaderIdx;
 
         // Temp list
         List<string> _tempList;
@@ -33,6 +33,9 @@ namespace LLLRC
 
         // Struct verbs list
         List<string> _structVerbInfo;
+
+        // FunctionsNamesList
+        List<string> _funcNames;
 
         public LLRC_CheckList()
         {
@@ -45,6 +48,9 @@ namespace LLLRC
             _tempList = new List<string>();
             _globalVerbInfo = new List<string>();
             _structVerbInfo = new List<string>();
+            _funcNames = new List<string>();
+            _tempStartHeaderIdx = new List<int>();
+            _tempEndHeaderIdx = new List<int>();
         }
         #endregion
 
@@ -142,7 +148,21 @@ namespace LLLRC
                     return idx;
                 }
             }
-            return -1;
+            return (-1);
+        }
+
+        internal List<string> GrammerRemoveDifrances(string[] lines)
+        {
+            _res.Clear();
+
+            for (int idx = 0; idx < lines.Length; idx++)
+            {
+                lines[idx] = lines[idx].Split(':')[2];
+            }
+            _res = lines.ToList();
+            _res = _res.Distinct().ToList();
+
+            return (_res);
         }
         #endregion
 
@@ -154,7 +174,6 @@ namespace LLLRC
             _res.Clear();
             _stream = File.ReadAllLines(_filePath);
             _startHeaderIdx.Clear(); _endHeaderIdx.Clear();
-            int tabIndex = 0;
             GetLineIdx(_stream, "{", "}", LLRC_Common.SPECIAL_END_FINDS.END_OF_FUNCTION);
 
             // Remove duplicate from list
@@ -174,7 +193,7 @@ namespace LLLRC
                 Console.WriteLine("Something wrong with 1 or more of function header");
             }
 
-            return _res;
+            return (_res);
         }
 
         private void CheckTabsSpace(string[] _stream, int startPos, int stopPos, int tabIndex)
@@ -272,6 +291,7 @@ namespace LLLRC
                 }
             }
         }
+
         #endregion
 
         #region Check not use in Elbit types
@@ -296,7 +316,7 @@ namespace LLLRC
                     }
                 }
             }
-            return _res;
+            return (_res);
         }
         #endregion
 
@@ -323,7 +343,7 @@ namespace LLLRC
                     _res.Add(string.Format("Don`t found fields: {0}", field));
                 }
             }
-            return _res;
+            return (_res);
         }
         #endregion
 
@@ -351,7 +371,7 @@ namespace LLLRC
                     _res.Add(string.Format("Don`t found fields: {0}", field));
                 }
             }
-            return _res;
+            return (_res);
         }
 
         #endregion
@@ -388,7 +408,7 @@ namespace LLLRC
             {
                 Console.WriteLine("Something wrong with 1 or more of function header");
             }
-            return _res;
+            return (_res);
         }
 
         private void CheckStructMatch(string[] _stream, int startPos, int stopPos)
@@ -479,7 +499,7 @@ namespace LLLRC
             {
                 Console.WriteLine("Something wrong with 1 or more of function header");
             }
-            return _res;
+            return (_res);
         }
         #endregion
 
@@ -514,7 +534,7 @@ namespace LLLRC
                 Console.WriteLine("Something wrong with 1 or more of function header");
             }
 
-            return _res;
+            return (_res);
         }
 
         private void CheckParamKey(string[] _stream, int startLine, int stopLine)
@@ -610,29 +630,102 @@ namespace LLLRC
         }
         #endregion
 
+        #region Check functions names
+
+        internal List<string> CheckSourceFunctionNames(string _filePath)
+        {
+            _res.Clear();
+            _funcNames.Clear();
+            _stream = File.ReadAllLines(_filePath);
+            string moduleName = Path.GetFileName(_filePath).Split('_')[0];
+            _startHeaderIdx.Clear(); _endHeaderIdx.Clear();
+            GetLineIdx(_stream, "{", "}", LLRC_Common.SPECIAL_END_FINDS.END_OF_FUNCTION);
+
+            // Remove duplicate from list
+            _startHeaderIdx = _startHeaderIdx.Distinct().ToList();
+
+            GetFunctionNamesAndPos(_stream, _startHeaderIdx);
+            checkFunctionsName(moduleName);
+            return (_res);
+        }
+
+
+        private void checkFunctionsName(string moduleName)
+        {
+            string funcName = string.Empty, linePos = string.Empty;
+            foreach (var line in _funcNames)
+            {
+                linePos = line.Split(',')[0].Split(':')[1];
+                funcName = line.Split(',')[1].Split(':')[1];
+                
+
+                // Check function name - Contain module name
+                if (false == funcName.Contains(moduleName))
+                {
+                    _res.Add(string.Format("Line pos = {0} \nFunction name: {1} \nIssue: Don`t find module name {2} \n", linePos + 1, funcName, moduleName));
+                }
+
+                // Check function name - Contain "p_"
+                if (false == funcName.Contains("p_"))
+                {
+                    _res.Add(string.Format("Line pos = {0} \nFunction name: {1} \nIssue: Don`t find p_ prefix \n", linePos + 1, funcName));
+                }
+            }
+
+            //linesPart = readLine.Split();
+
+            //if (linesPart.Length < 3)
+            //{
+            //    return;
+            //}
+            //// Find function name
+            //if (linesPart[0] == "static")
+            //{
+            //    functionNames = linesPart[2].Split('(')[0];
+            //}
+            //else
+            //{
+
+            //    functionNames = linesPart[1].Split('(')[0];
+            //}
+
+
+        }
+        #endregion
+
         #region Check global header
         internal List<string> CheckGlobalHeader(string _filePath)
         {
             _res.Clear();
             _stream = File.ReadAllLines(_filePath);
-            _startHeaderIdx.Clear(); _endHeaderIdx.Clear();
+            _startHeaderIdx.Clear(); _endHeaderIdx.Clear(); _tempStartHeaderIdx.Clear(); _tempEndHeaderIdx.Clear();
 
             GetLineIdx(_stream, "$GLOBAL VARIABLES$", "/*--", LLRC_Common.SPECIAL_END_FINDS.NONE);
+
+            _tempStartHeaderIdx.AddRange(_startHeaderIdx);
+            _tempEndHeaderIdx.AddRange(_endHeaderIdx);
 
             string moduleName = Path.GetFileName(_filePath).Split('_')[0];
 
             try
             {
-                for (int idx = 0; idx < Math.Min(_startHeaderIdx.Count, _endHeaderIdx.Count); idx++)
+                for (int idx = 0; idx < Math.Min(_tempStartHeaderIdx.Count, _tempEndHeaderIdx.Count); idx++)
                 {
-                    CheckInGroupKey(_stream, _startHeaderIdx[idx], _endHeaderIdx[idx], moduleName);
+                    CheckInGroupKey(_stream, _tempStartHeaderIdx[idx], _tempEndHeaderIdx[idx], moduleName);
 
                     _globalVerbInfo.Clear();
-                    GetGlobalVerbsInfo(_stream, _endHeaderIdx[idx] + 1);
+                    GetGlobalVerbsInfo(_stream, _tempEndHeaderIdx[idx] + 1);
 
-                    CheckHeaderFields(_stream, "Global", LLRC_Common.GLOBAL_FIELDS, _startHeaderIdx[idx], _endHeaderIdx[idx]);
-                    CheckStaticGlobalVerbs(_endHeaderIdx[idx] + 1);
-                    CheckVeriableNameLine(_stream, moduleName, _startHeaderIdx[idx], _endHeaderIdx[idx]);
+                    _res.Add(string.Format("Global name: {0}", _globalVerbInfo[2].Split('[')[0].Replace(';', ' ').Trim()));
+
+                    _res.Add(string.Format("Header issues:"));
+                    CheckHeaderFields(_stream, "Global", LLRC_Common.GLOBAL_FIELDS, _tempStartHeaderIdx[idx], _tempEndHeaderIdx[idx]);
+                    CheckStaticGlobalVerbs(_tempEndHeaderIdx[idx] + 1);
+                    CheckVeriableNameLine(_stream, moduleName, _tempStartHeaderIdx[idx], _tempEndHeaderIdx[idx]);
+
+                    CheckGlobalUsedByRow(_stream, _globalVerbInfo[2]);
+
+                    _res.Add(string.Format(Environment.NewLine + "==========================================================" + Environment.NewLine));
                 }
             }
             catch (Exception)
@@ -640,6 +733,67 @@ namespace LLLRC
                 Console.WriteLine("Something wrong with 1 or more of function header");
             }
             return _res;
+        }
+
+        private void CheckGlobalUsedByRow(string[] _stream, string globalName)
+        {
+            _funcNames.Clear();
+            _startHeaderIdx.Clear();
+            List<int> globalIndex = new List<int>();
+            Int32 tempFuncPos = 0;
+            string tempFuncName = string.Empty, lineRes = string.Empty, fixGlobalName = string.Empty;
+
+            // First find all lines in file that global apear:
+            fixGlobalName = globalName.Split('[')[0].Replace(';', ' ').Trim();
+
+            for (int idx = 0; idx < _stream.Length; idx++)
+            {
+                if (true == _stream[idx].Contains(fixGlobalName))
+                {
+                    globalIndex.Add(idx);
+                }
+            }
+
+            // Get function start index and functions names:
+            GetLineIdx(_stream, "{", "}", LLRC_Common.SPECIAL_END_FINDS.END_OF_FUNCTION);
+            _startHeaderIdx = _startHeaderIdx.Distinct().ToList();
+            GetFunctionNamesAndPos(_stream, _startHeaderIdx);
+
+            foreach (var globalLine in globalIndex)
+            {
+                tempFuncName = string.Empty;
+
+                for (int idx = 0; idx < _funcNames.Count; idx++)
+                {
+                    tempFuncPos = Int32.Parse(_funcNames[idx].Split(',')[0].Split(':')[1]);
+                    if(tempFuncPos < globalLine)
+                    {
+                        tempFuncName = _funcNames[idx].Split(',')[1].Split(':')[1];
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                if(tempFuncName != string.Empty)
+                {
+                    if(false == lineRes.Contains(tempFuncName))
+                    {
+                        lineRes += string.Format("{0},", tempFuncName);
+                    }
+                }
+            }
+
+            if(lineRes == string.Empty)
+            {
+                _res.Add(string.Format("Don`t found in any functions"));
+            }
+            else
+            {
+                _res.Add(string.Format("Found in functions: {0}", lineRes));
+            }
+            
         }
 
         private bool GetGlobalVerbsInfo(string[] _stream, int linePost)
@@ -719,10 +873,6 @@ namespace LLLRC
 
             for (idx = 0; idx < _stream.Length; idx++)
             {
-                if(idx == 756)
-                {
-                    int a = 7;
-                }
                 if (_stream[idx].Contains(firsHeaderLineKey ))
                 {
                     _startHeaderIdx.Add(idx);
@@ -770,6 +920,43 @@ namespace LLLRC
                 {
                     _res.Add(string.Format("{0} header field: {1} don`t found. line pos: {2}", moduleType, key, startPos));
                 }
+            }
+        }
+
+        private void GetFunctionNamesAndPos(string[] stream, List<int> _startHeaderIdx)
+        {
+            string tmpFuncName = string.Empty;
+            string[] linesPart;
+            foreach (var item in _startHeaderIdx)
+            {
+                if(item == 759)
+                {
+                    int a = 0x7;
+                }
+
+                tmpFuncName = stream[item - 1];
+                if (true == tmpFuncName.Contains("typedef"))
+                {
+                    continue;
+                }
+
+                linesPart = tmpFuncName.Split();
+
+                if (linesPart.Length < 2)
+                {
+                    continue;
+                }
+                // Find function name
+                if (linesPart[0] == "static")
+                {
+                    tmpFuncName = linesPart[2].Split('(')[0];
+                }
+                else
+                {
+
+                    tmpFuncName = linesPart[1].Split('(')[0];
+                }
+                _funcNames.Add(string.Format("pos: {0}, name: {1}", item, tmpFuncName));
             }
         }
         #endregion

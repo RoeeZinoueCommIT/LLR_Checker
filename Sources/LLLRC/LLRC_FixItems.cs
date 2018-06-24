@@ -15,6 +15,8 @@ namespace LLLRC
         string[] _stream;
         #endregion
 
+        #region Fix general items
+
         #region Fix Tabs
 
         internal void FixTabs(string[] linesToFix, string _filePath)
@@ -64,10 +66,10 @@ namespace LLLRC
         {
             _stream = File.ReadAllLines(_filePath);
             Int32 linePos = 0, spacePos = 0;
-            string[] newLineArray; 
+            string[] newLineArray;
             string newLine = string.Empty;
 
-            for (int idx = 0; idx < linesToFix.Length - 4; idx+=4)
+            for (int idx = 0; idx < linesToFix.Length - 4; idx += 4)
             {
                 newLine = string.Empty;
                 linePos = Int32.Parse(linesToFix[idx].Split(':')[1]);
@@ -75,7 +77,7 @@ namespace LLLRC
                 newLineArray = linesToFix[idx + 2].Substring(LLRC_Common.SPACE_STR_KEY_WORD.Length).Split();
                 foreach (var word in newLineArray)
                 {
-                    if(word != string.Empty)
+                    if (word != string.Empty)
                     {
                         newLine += string.Format(" {0}", word);
                     }
@@ -84,6 +86,8 @@ namespace LLLRC
             }
             WriteNewArrayToFile(_filePath, _stream);
         }
+        #endregion
+
         #endregion
 
         #region Common class methods
