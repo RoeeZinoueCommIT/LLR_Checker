@@ -55,7 +55,9 @@ namespace LLLRC
 
         #endregion
 
-        #region Checking - Allowed values 
+        #region Allowed values 
+
+        #region Elbit types
 
         internal static List<string> UNSUPPORT_ELBIT_TYPES = new List<string>()
         {
@@ -67,6 +69,66 @@ namespace LLLRC
             "bool",
             "uint32_t",
         };
+        #endregion
+
+        #region Range values
+
+        internal static List<string> ALLOWED_RANGE_VALUES_PRIMITIVE = new List<string>()
+        {
+            "Positive",
+            "Full range"
+        };
+
+
+
+        internal static List<string> ALLOWED_RANGE_VALUES_POINTER = new List<string>()
+        {
+            "Not NULL",
+        };
+        #endregion
+
+        #region Allowed words
+
+        internal static List<string> ALLOWED_WORDS = new List<string>()
+        {
+            "rot", /*Rotation*/
+            "mat", /*Matrix*/
+            "quat", /*Quaternion*/
+            "vec", /*Vector*/
+            "pos", /*Position*/
+            "vel", /*Velocity*/
+            "acc", /*Acceleration*/
+            "corr", /*Corrected*/
+            "avg", /*Average*/
+            "gyro", /*Gyroscope*/
+            "filt", /*Filter*/
+            "prev", /*Previous*/
+            "ang", /*Angular*/
+            "integ", /*Integrate*/
+            "ev", /*Euler vector*/
+            "prod", /*Product*/
+            "2", /*to*/
+            "4", /*for*/
+            "Rx", /*Receive*/
+            "Tx", /*Transmit*/
+            "sec", /*Second*/
+            "msec", /*Milisecond*/
+            "usec", /*Microsecond*/
+            "lat", /*Latitude*/
+            "lon", /*Longitude*/
+            "alt", /*Altitude*/
+            "att", /*Attitude*/
+            "hor", /*Horizontal*/
+            "vert", /*Vertical*/
+            "rad", /*Radian*/
+            "deg", /*Degree*/
+        };
+        #endregion
+        #endregion
+
+        #region Header / Structure fields
+
+        #region Global header fields
 
         internal static List<string> GLOBAL_FIELDS = new List<string>()
         {
@@ -81,6 +143,9 @@ namespace LLLRC
             "Set by",
             "Used by",
         };
+        #endregion
+
+        #region Structure fields
 
         internal static List<string> STRUCTURE_FIELDS = new List<string>()
         {
@@ -91,6 +156,9 @@ namespace LLLRC
             "Members Names:",
             "Members Units:",
         };
+        #endregion
+
+        #region Function header fields
 
         internal static List<string> FUNCTION_FIELDS = new List<string>()
         {
@@ -102,6 +170,9 @@ namespace LLLRC
             @"\Justification",
             @"\param",
         };
+        #endregion
+
+        #region Define fields
 
         internal static List<string> DEFINE_FIELDS = new List<string>()
         {
@@ -111,6 +182,21 @@ namespace LLLRC
             "Define Value:",
             "Description:",
         };
+        #endregion
+
+        #region Header file fields
+
+        internal static List<string> HEADER_STRUCT_TITLES = new List<string>()
+        {
+            @"/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INCLUDES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
+            @"/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% DEFINES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
+            @"/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% STRUCTURES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
+            @"/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TYPES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
+            @"/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PUBLIC DECLARATIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
+        };
+        #endregion
+
+        #region Structure file fields
 
         internal static List<string> SOURCE_STRUCT_TITLES = new List<string>()
         {
@@ -123,28 +209,9 @@ namespace LLLRC
             @"/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LOCAL DECLARATIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
             @"/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FUNCTIONS IMPLEMENTATION %%%%%%%%%%%%%%%%%%%%%%%%%%% */",
         };
-
-        internal static List<string> HEADER_STRUCT_TITLES = new List<string>()
-        {
-            @"/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INCLUDES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
-            @"/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% DEFINES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
-            @"/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% STRUCTURES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
-            @"/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TYPES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
-            @"/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PUBLIC DECLARATIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
-        };
-
-        internal static List<string> ALLOWED_RANGE_VALUES_PRIMITIVE = new List<string>()
-        {
-            "Positive",
-            "Full range"
-        };
-
-        internal static List<string> ALLOWED_RANGE_VALUES_POINTER = new List<string>()
-        {
-            "Not NULL",
-        };
         #endregion
 
+        #endregion
 
         internal static string SPACE_STR_KEY_WORD = "Str_val:";
 

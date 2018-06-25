@@ -55,6 +55,7 @@ namespace LLLRC
                     cFileType = LLRC_Common.FILE_TYPE.UNDEFINED;
                 }
                 ShowFileFields();
+                ViewFile();
             }
         }
 
@@ -106,6 +107,52 @@ namespace LLLRC
                 }
             }
         }
+
+        #region File viewer and search for key
+
+        private void btnViewFile_Click(object sender, EventArgs e)
+        {
+            ViewFile();
+        }
+
+        private void ViewFile()
+        {
+            rtbViewFile.Lines = _checkList.ViewFile(_filePath).ToArray();
+        }
+        private void btnViewFileClear_Click(object sender, EventArgs e)
+        {
+            rtbViewFile.Clear();
+        }
+
+        private void btnFileViewFind_Click(object sender, EventArgs e)
+        {
+            int len = rtbViewFile.TextLength;
+            int index = 0;
+            int lastIndex = rtbViewFile.Text.LastIndexOf(tbxFindKey.Text);
+
+            while (index < lastIndex)
+            {
+                rtbViewFile.Find(tbxFindKey.Text, index, len, RichTextBoxFinds.None);
+                rtbViewFile.SelectionBackColor = Color.Yellow;
+                index = rtbViewFile.Text.IndexOf(this.tbxFindKey.Text, index) + 1;
+            }
+        }
+
+        private void btnFindKeyClear_Click(object sender, EventArgs e)
+        {
+            int len = rtbViewFile.TextLength;
+            int index = 0;
+            int lastIndex = rtbViewFile.Text.LastIndexOf(tbxFindKey.Text);
+
+            while (index < lastIndex)
+            {
+                rtbViewFile.Find(tbxFindKey.Text, index, len, RichTextBoxFinds.None);
+                rtbViewFile.SelectionBackColor = Color.Gainsboro;
+                index = rtbViewFile.Text.IndexOf(this.tbxFindKey.Text, index) + 1;
+            }
+        }
+        #endregion
+
         #endregion
 
         #region Check subjects
@@ -200,43 +247,8 @@ namespace LLLRC
         }
         #endregion
 
-        private void btnViewFile_Click(object sender, EventArgs e)
-        {
-            rtbViewFile.Lines = _checkList.ViewFile(_filePath).ToArray();
-        }
+        
 
-        private void btnViewFileClear_Click(object sender, EventArgs e)
-        {
-            rtbViewFile.Clear();
-        }
-
-        private void btnFileViewFind_Click(object sender, EventArgs e)
-        {
-            int len = rtbViewFile.TextLength;
-            int index = 0;
-            int lastIndex = rtbViewFile.Text.LastIndexOf(tbxFindKey.Text);
-
-            while (index < lastIndex)
-            {
-                rtbViewFile.Find(tbxFindKey.Text, index, len, RichTextBoxFinds.None);
-                rtbViewFile.SelectionBackColor = Color.Yellow;
-                index = rtbViewFile.Text.IndexOf(this.tbxFindKey.Text, index) + 1;
-            }
-        }
-
-        private void btnFindKeyClear_Click(object sender, EventArgs e)
-        {
-            int len = rtbViewFile.TextLength;
-            int index = 0;
-            int lastIndex = rtbViewFile.Text.LastIndexOf(tbxFindKey.Text);
-
-            while (index < lastIndex)
-            {
-                rtbViewFile.Find(tbxFindKey.Text, index, len, RichTextBoxFinds.None);
-                rtbViewFile.SelectionBackColor = Color.Gainsboro;
-                index = rtbViewFile.Text.IndexOf(this.tbxFindKey.Text, index) + 1;
-            }
-        }
     }
  }
 

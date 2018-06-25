@@ -63,6 +63,7 @@ namespace LLLRC
             _res.Clear();
             appWord.Documents.Add();
             _stream = File.ReadAllLines(_filePath);
+            bool foundWordInDic = false;
 
             for (int idx = 0; idx < _stream.Length; idx++)
             {
@@ -77,13 +78,23 @@ namespace LLLRC
                         }
                         else
                         {
-                            if (true == CheckWordForGrammer(word))
+                            if (false == CheckWordForGrammer(word))
                             {
+                                foundWordInDic = false;
 
-                            }
-                            else
-                            {
-                                _res.Add("Line: " + idx + " Word: " + word);
+                                // Check if the word apear in the allowed words list
+                                foreach (var item in LLRC_Common.ALLOWED_WORDS)
+                                {
+                                    if(word == item)
+                                    {
+                                        foundWordInDic = true;
+                                        break;
+                                    }
+                                }
+                                if(false == foundWordInDic)
+                                {
+                                    _res.Add("Line: " + idx + " Word: " + word);
+                                }
                             }
                         }
                     }
@@ -199,94 +210,109 @@ namespace LLLRC
         private void CheckTabsSpace(string[] _stream, int startPos, int stopPos, int tabIndex)
         {
             int tabPosIndx = 1;
-            bool rowSignFlagPos = false, rowSignFlagNeg = false;
+            bool inSwitchLoop = false;
+            int decTabPos = 0, IncTabPos = 0;
             string lastLine = string.Empty;
             for (int rowIdx = startPos + 1; rowIdx < stopPos; rowIdx++)
             {
-                rowSignFlagPos = false;
-                rowSignFlagNeg = false;
+                decTabPos = 0;
+                IncTabPos = 0;
+                
                 MatchCollection matches = Regex.Matches(_stream[rowIdx], "(\\s+)");
                 int[] spaceArray = matches.OfType<Match>().Select(m => m.Length).ToArray();
 
-                if (spaceArray.Length == 0) // If there is nothing writing in row skip row.
+                if ((spaceArray.Length == 0) || (true == _stream[rowIdx].Contains("#"))) // If there is nothing writing in row skip row.
                 {
                     continue;
                 }
                 else
                 {
-                    
-                    if (rowIdx == 774)
+                    if (rowIdx == 809)
                     {
                         int a = 0x7;
                     }
+
+                    if (true == _stream[rowIdx].Contains("switch"))
+                    {
+                        inSwitchLoop = true;
+                    }
+
+                    #region Increment tab pos right
+
                     if (true == _stream[rowIdx].Contains("{"))
                     {
-                        tabPosIndx++;
-                        rowSignFlagPos = true;
+                        IncTabPos++;
                     }
-                    if ((true == _stream[rowIdx].Contains("case")))
+                    if ((true == _stream[rowIdx].Contains("case")) && (false == _stream[rowIdx + 1].Contains("{")))
                     {
-                        tabPosIndx++;
-                        rowSignFlagPos = true;
+                        IncTabPos++;
                     }
                     if (true == _stream[rowIdx].Contains("default"))
                     {
-                        if((false == lastLine.Contains("break;")))
-                        {
-                            //tabPosIndx--;
-                            rowSignFlagPos = true;
-                        }
-                        else
-                        {
-                            tabPosIndx++;
-                        }
-                        
-                    }
-                    if ((true == _stream[rowIdx].Contains("}")))
-                    {
-                        if((false == lastLine.Contains("break;")))
+                        if(true == lastLine.Contains("case"))
                         {
                             tabPosIndx--;
                         }
-                        
+                        IncTabPos++;
                     }
-                    if ((true == _stream[rowIdx].Contains("break;")))
+                    #endregion
+
+                    #region Decrement tab pos left
+
+                    if(true == inSwitchLoop)
                     {
-                        tabPosIndx--;
-                        rowSignFlagNeg = true;
+                        if (true == _stream[rowIdx].Contains("break;"))
+                        {
+                            if (true == _stream[rowIdx + 1].Contains("}"))
+                            {
+                                decTabPos = 2;
+                                rowIdx++;   /* Don`t check next line, we already knew what is it } */ 
+                                inSwitchLoop = false;
+                            }
+                            else
+                            {
+                                decTabPos++;
+                            }
+                            
+                        }
                     }
-                    if (true == _stream[rowIdx].Contains("#"))
+                    else if (false == inSwitchLoop)
                     {
-                        continue;
+                        if ((true == _stream[rowIdx + 1].Contains("}")) && (false == _stream[rowIdx + 1].Contains("case:")))
+                        {
+                            decTabPos++;
+                        }
+                    }
+                    
+                    
+                    #endregion
+                    
+                    #region Check tab position
+
+                    if (spaceArray[0] != (4 * tabPosIndx))
+                    {
+                        _res.Add(string.Format("Tab error. Pos: {0}, Tab: {1}, Row: {2}" + Environment.NewLine, rowIdx + 1, 4 * tabPosIndx, _stream[rowIdx].Trim()));
                     }
 
-                    // Check tabs positions
-                    if ((false == rowSignFlagPos) && (false == rowSignFlagNeg))
+                    // Decrement / increment tab position
+                    if (decTabPos > 0)
                     {
-                        if (spaceArray[0] != (4 * tabPosIndx))
+                        for (int idx = 0; idx < decTabPos; idx++)
                         {
-                            _res.Add(string.Format("Tab error. Pos: {0}, Tab: {1}, Row: {2}" + Environment.NewLine, rowIdx + 1, 4 * tabPosIndx, _stream[rowIdx].Trim()));
+                            tabPosIndx--;
                         }
                     }
-                    else
+                    else if (IncTabPos > 0)
                     {
-                        if (rowSignFlagNeg == true)
+                        for (int idx = 0; idx < IncTabPos; idx++)
                         {
-                            if (spaceArray[0] != (4 * (tabPosIndx + 1)))
-                            {
-                                _res.Add(string.Format("Tab error. Pos: {0}, Tab: {1}, Row: {2}" + Environment.NewLine, rowIdx + 1, 4 * (tabPosIndx + 1), _stream[rowIdx].Trim()));
-                            }
+                            tabPosIndx++;
                         }
-                        else
-                        {
-                            if (spaceArray[0] != (4 * (tabPosIndx - 1)))
-                            {
-                                _res.Add(string.Format("Tab error. Pos: {0}, Tab: {1}, Row: {2}" + Environment.NewLine, rowIdx + 1, 4 * (tabPosIndx - 1), _stream[rowIdx]));
-                            }
-                        }
+
                     }
+
                     lastLine = _stream[rowIdx];
-
+                    #endregion
 
                 }
             }
