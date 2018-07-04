@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -108,6 +109,27 @@ namespace LLLRC
             }
         }
 
+        private void OpenFileNotepadPlusPlus(object sender, EventArgs e)
+        {
+            if (cFileType == LLRC_Common.FILE_TYPE.UNDEFINED)
+            {
+                InfraMessageFail(LLRC_Common.MSG_APP_FAIL_NOT_VALID_FILE_FORMAT);
+                return;
+            }
+
+            try
+            {
+                Process myProcess = new Process();
+                Process.Start("notepad++.exe", _filePath);
+                InfraMessageOk("Open file in notepad++ O.K");
+            }
+            catch (Exception ex)
+            {
+                InfraMessageFail(ex.Message);
+            }
+
+        }
+
         #region File viewer and search for key
 
         private void btnViewFile_Click(object sender, EventArgs e)
@@ -159,7 +181,9 @@ namespace LLLRC
 
         private void btnCheckSubject_Click(object sender, EventArgs e)
         {
-            if(cFileType == LLRC_Common.FILE_TYPE.UNDEFINED)
+            bool wrongOptForFileFormat = false;
+            bool isGeneralSubject = false;
+            if (cFileType == LLRC_Common.FILE_TYPE.UNDEFINED)
             {
                 InfraMessageFail(LLRC_Common.MSG_APP_FAIL_NOT_VALID_FILE_FORMAT);
                 return;
@@ -176,79 +200,107 @@ namespace LLLRC
             {
                 rtbResDisplay.Lines = _checkList.CheckSpaces(_filePath).ToArray();
                 cFixItem = LLRC_Common.ALLOWED_FIX_ITEMS.SPACES;
+                isGeneralSubject = true;
             }
             else if (true == rdbCheckGrammerLines.Checked)
             {
                 rtbResDisplay.Lines = _checkList.CheckGrammer(_filePath).ToArray();
+                isGeneralSubject = true;
             }
             else if (true == rdbCheckGrammerDifrenences.Checked)
             {
                 rtbResDisplay.Lines = _checkList.CheckGrammer(_filePath).ToArray();
                 rtbResDisplay.Lines = _checkList.GrammerRemoveDifrances(rtbResDisplay.Lines).ToArray();
-
+                isGeneralSubject = true;
             }
-            else if(true == rdbCheckElbitTypes.Checked)
+            else if (true == rdbCheckElbitTypes.Checked)
             {
                 rtbResDisplay.Lines = _checkList.CheckTypes(_filePath).ToArray();
+                isGeneralSubject = true;
             }
             else if (true == rdbCheckStructHeader.Checked)
             {
                 rtbResDisplay.Lines = _checkList.CheckStructHeader(_filePath).ToArray();
                 cFixItem = LLRC_Common.ALLOWED_FIX_ITEMS.HEADER_STRUCTURE;
+                isGeneralSubject = true;
             }
             else if (true == rdbCheckDefineHeader.Checked)
             {
                 rtbResDisplay.Lines = _checkList.CheckDefineHeader(_filePath).ToArray();
+                isGeneralSubject = true;
             }
-            else if(true == rdbCheckTabs.Checked)
+            else if (true == rdbCheckTabs.Checked)
             {
                 rtbResDisplay.Lines = _checkList.CheckTabs(_filePath).ToArray();
                 cFixItem = LLRC_Common.ALLOWED_FIX_ITEMS.TABS;
+                isGeneralSubject = true;
+            }
+            else if (true == rdbCheckEnumHeader.Checked)
+            {
+                rtbResDisplay.Lines = _checkList.CheckEnums(_filePath).ToArray();
+                cFixItem = LLRC_Common.ALLOWED_FIX_ITEMS.TABS;
+                isGeneralSubject = true;
             }
             #endregion
 
             #region Check source file
 
-            else if (true == rdbCheckFunctionHeader.Checked)
+            if (cFileType == LLRC_Common.FILE_TYPE.SOURCE)
             {
-                if(cFileType == LLRC_Common.FILE_TYPE.SOURCE)
+                if (true == rdbCheckFunctionHeader.Checked)
                 {
                     rtbResDisplay.Lines = _checkList.CheckFunctionHeader(_filePath).ToArray();
                 }
+                else if (true == rdbCheckSourceStructure.Checked)
+                {
+                    rtbResDisplay.Lines = _checkList.CheckSourceStructure(_filePath).ToArray();
+                }
+                else if (true == rdbCheckGlobal.Checked)
+                {
+                    rtbResDisplay.Lines = _checkList.CheckGlobalHeader(_filePath).ToArray();
+                }
+                else if (true == rdbCheckFunctionNames.Checked)
+                {
+                    rtbResDisplay.Lines = _checkList.CheckSourceFunctionContents(_filePath).ToArray();
+                }
+                else if (true == rdbCheckSourceFileHeader.Checked)
+                {
+                    rtbResDisplay.Lines = _checkList.CheckSourceFileHeader(_filePath).ToArray();
+                }
                 else
                 {
-                    InfraMessageFail(LLRC_Common.MSG_APP_FAIL_WRONG_SUBJECT_FOR_FILE_FORMAT);
-                }   
+                    wrongOptForFileFormat = true;
+                }
             }
-            else if(true == rdbCheckSourceStructure.Checked)
-            {
-                rtbResDisplay.Lines = _checkList.CheckSourceStructure(_filePath).ToArray();
-            }
-            else if (true == rdbCheckGlobal.Checked)
-            {
-                rtbResDisplay.Lines = _checkList.CheckGlobalHeader(_filePath).ToArray();
-            }
-            else if(true == rdbCheckFunctionNames.Checked)
-            {
-                rtbResDisplay.Lines = _checkList.CheckSourceFunctionNames(_filePath).ToArray();
-            }
+
+
             #endregion
 
             #region Check header file
-
-            else if (true == rdbCheckHeaderStructure.Checked)
+            if (cFileType == LLRC_Common.FILE_TYPE.HEADER)
             {
-                rtbResDisplay.Lines = _checkList.CheckHeaderStructure(_filePath).ToArray();
+                if (true == rdbCheckHeaderStructure.Checked)
+                {
+                    rtbResDisplay.Lines = _checkList.CheckHeaderStructure(_filePath).ToArray();
+                }
+                else
+                {
+                    wrongOptForFileFormat = true;
+                }
             }
-            #endregion
 
-            lblNumRes.Text = rtbResDisplay.Lines.Count().ToString();
-            InfraMessageOk(LLRC_Common.MSG_APP_OK_FINISH_ANALYZE_SUBJECT);
+            #endregion
+            if((true == wrongOptForFileFormat) && (false == isGeneralSubject))
+            {
+                InfraMessageFail(LLRC_Common.MSG_APP_FAIL_WRONG_SUBJECT_FOR_FILE_FORMAT);
+            }
+            else
+            {
+                lblNumRes.Text = rtbResDisplay.Lines.Count().ToString();
+                InfraMessageOk(LLRC_Common.MSG_APP_OK_FINISH_ANALYZE_SUBJECT);
+            }
         }
         #endregion
-
-        
-
     }
  }
 

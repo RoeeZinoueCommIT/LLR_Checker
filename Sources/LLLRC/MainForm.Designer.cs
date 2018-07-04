@@ -47,10 +47,10 @@
             this.rdbCheckGlobal = new System.Windows.Forms.RadioButton();
             this.label6 = new System.Windows.Forms.Label();
             this.rdbCheckSpaces = new System.Windows.Forms.RadioButton();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
+            this.rdbCheckSourceFileHeader = new System.Windows.Forms.RadioButton();
             this.rdbCheckSourceStructure = new System.Windows.Forms.RadioButton();
             this.rdbCheckGrammerLines = new System.Windows.Forms.RadioButton();
-            this.radioButton8 = new System.Windows.Forms.RadioButton();
+            this.rdbCheckEnumHeader = new System.Windows.Forms.RadioButton();
             this.rdbCheckFunctionHeader = new System.Windows.Forms.RadioButton();
             this.rdbCheckTabs = new System.Windows.Forms.RadioButton();
             this.rdbCheckElbitTypes = new System.Windows.Forms.RadioButton();
@@ -64,17 +64,18 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnOpenFile = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.btnFindKeyClear = new System.Windows.Forms.Button();
+            this.btnFileViewFind = new System.Windows.Forms.Button();
+            this.tbxFindKey = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.btnViewFileClear = new System.Windows.Forms.Button();
             this.btnViewFile = new System.Windows.Forms.Button();
             this.gbxViewFile = new System.Windows.Forms.GroupBox();
+            this.rtbViewFile = new System.Windows.Forms.RichTextBox();
             this.ofdOpenFile = new System.Windows.Forms.OpenFileDialog();
             this.label4 = new System.Windows.Forms.Label();
             this.lblAppStatus = new System.Windows.Forms.Label();
-            this.rtbViewFile = new System.Windows.Forms.RichTextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.tbxFindKey = new System.Windows.Forms.TextBox();
-            this.btnFileViewFind = new System.Windows.Forms.Button();
-            this.btnFindKeyClear = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -192,10 +193,10 @@
             this.groupBox5.Controls.Add(this.rdbCheckGlobal);
             this.groupBox5.Controls.Add(this.label6);
             this.groupBox5.Controls.Add(this.rdbCheckSpaces);
-            this.groupBox5.Controls.Add(this.radioButton3);
+            this.groupBox5.Controls.Add(this.rdbCheckSourceFileHeader);
             this.groupBox5.Controls.Add(this.rdbCheckSourceStructure);
             this.groupBox5.Controls.Add(this.rdbCheckGrammerLines);
-            this.groupBox5.Controls.Add(this.radioButton8);
+            this.groupBox5.Controls.Add(this.rdbCheckEnumHeader);
             this.groupBox5.Controls.Add(this.rdbCheckFunctionHeader);
             this.groupBox5.Controls.Add(this.rdbCheckTabs);
             this.groupBox5.Controls.Add(this.rdbCheckElbitTypes);
@@ -245,7 +246,7 @@
             // rdbCheckDefineHeader
             // 
             this.rdbCheckDefineHeader.AutoSize = true;
-            this.rdbCheckDefineHeader.Location = new System.Drawing.Point(7, 194);
+            this.rdbCheckDefineHeader.Location = new System.Drawing.Point(7, 175);
             this.rdbCheckDefineHeader.Name = "rdbCheckDefineHeader";
             this.rdbCheckDefineHeader.Size = new System.Drawing.Size(80, 16);
             this.rdbCheckDefineHeader.TabIndex = 16;
@@ -258,10 +259,10 @@
             this.rdbCheckHeaderStructure.AutoSize = true;
             this.rdbCheckHeaderStructure.Location = new System.Drawing.Point(7, 342);
             this.rdbCheckHeaderStructure.Name = "rdbCheckHeaderStructure";
-            this.rdbCheckHeaderStructure.Size = new System.Drawing.Size(92, 16);
+            this.rdbCheckHeaderStructure.Size = new System.Drawing.Size(104, 16);
             this.rdbCheckHeaderStructure.TabIndex = 10;
             this.rdbCheckHeaderStructure.TabStop = true;
-            this.rdbCheckHeaderStructure.Text = "Header structure";
+            this.rdbCheckHeaderStructure.Text = "Header fle structure";
             this.rdbCheckHeaderStructure.UseVisualStyleBackColor = true;
             // 
             // label7
@@ -289,7 +290,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.label6.Location = new System.Drawing.Point(31, 217);
+            this.label6.Location = new System.Drawing.Point(32, 194);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(48, 12);
             this.label6.TabIndex = 14;
@@ -306,26 +307,26 @@
             this.rdbCheckSpaces.Text = "Spaces";
             this.rdbCheckSpaces.UseVisualStyleBackColor = true;
             // 
-            // radioButton3
+            // rdbCheckSourceFileHeader
             // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(6, 232);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(82, 16);
-            this.radioButton3.TabIndex = 8;
-            this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "Source header";
-            this.radioButton3.UseVisualStyleBackColor = true;
+            this.rdbCheckSourceFileHeader.AutoSize = true;
+            this.rdbCheckSourceFileHeader.Location = new System.Drawing.Point(6, 209);
+            this.rdbCheckSourceFileHeader.Name = "rdbCheckSourceFileHeader";
+            this.rdbCheckSourceFileHeader.Size = new System.Drawing.Size(96, 16);
+            this.rdbCheckSourceFileHeader.TabIndex = 8;
+            this.rdbCheckSourceFileHeader.TabStop = true;
+            this.rdbCheckSourceFileHeader.Text = "Source file header";
+            this.rdbCheckSourceFileHeader.UseVisualStyleBackColor = true;
             // 
             // rdbCheckSourceStructure
             // 
             this.rdbCheckSourceStructure.AutoSize = true;
-            this.rdbCheckSourceStructure.Location = new System.Drawing.Point(6, 254);
+            this.rdbCheckSourceStructure.Location = new System.Drawing.Point(6, 231);
             this.rdbCheckSourceStructure.Name = "rdbCheckSourceStructure";
-            this.rdbCheckSourceStructure.Size = new System.Drawing.Size(91, 16);
+            this.rdbCheckSourceStructure.Size = new System.Drawing.Size(105, 16);
             this.rdbCheckSourceStructure.TabIndex = 9;
             this.rdbCheckSourceStructure.TabStop = true;
-            this.rdbCheckSourceStructure.Text = "Source structure";
+            this.rdbCheckSourceStructure.Text = "Source file structure";
             this.rdbCheckSourceStructure.UseVisualStyleBackColor = true;
             // 
             // rdbCheckGrammerLines
@@ -339,21 +340,21 @@
             this.rdbCheckGrammerLines.Text = "English grammer (with lines)";
             this.rdbCheckGrammerLines.UseVisualStyleBackColor = true;
             // 
-            // radioButton8
+            // rdbCheckEnumHeader
             // 
-            this.radioButton8.AutoSize = true;
-            this.radioButton8.Location = new System.Drawing.Point(7, 172);
-            this.radioButton8.Name = "radioButton8";
-            this.radioButton8.Size = new System.Drawing.Size(77, 16);
-            this.radioButton8.TabIndex = 13;
-            this.radioButton8.TabStop = true;
-            this.radioButton8.Text = "Enum header";
-            this.radioButton8.UseVisualStyleBackColor = true;
+            this.rdbCheckEnumHeader.AutoSize = true;
+            this.rdbCheckEnumHeader.Location = new System.Drawing.Point(7, 153);
+            this.rdbCheckEnumHeader.Name = "rdbCheckEnumHeader";
+            this.rdbCheckEnumHeader.Size = new System.Drawing.Size(77, 16);
+            this.rdbCheckEnumHeader.TabIndex = 13;
+            this.rdbCheckEnumHeader.TabStop = true;
+            this.rdbCheckEnumHeader.Text = "Enum header";
+            this.rdbCheckEnumHeader.UseVisualStyleBackColor = true;
             // 
             // rdbCheckFunctionHeader
             // 
             this.rdbCheckFunctionHeader.AutoSize = true;
-            this.rdbCheckFunctionHeader.Location = new System.Drawing.Point(6, 276);
+            this.rdbCheckFunctionHeader.Location = new System.Drawing.Point(6, 253);
             this.rdbCheckFunctionHeader.Name = "rdbCheckFunctionHeader";
             this.rdbCheckFunctionHeader.Size = new System.Drawing.Size(89, 16);
             this.rdbCheckFunctionHeader.TabIndex = 11;
@@ -386,7 +387,7 @@
             // rdbCheckStructHeader
             // 
             this.rdbCheckStructHeader.AutoSize = true;
-            this.rdbCheckStructHeader.Location = new System.Drawing.Point(6, 149);
+            this.rdbCheckStructHeader.Location = new System.Drawing.Point(6, 130);
             this.rdbCheckStructHeader.Name = "rdbCheckStructHeader";
             this.rdbCheckStructHeader.Size = new System.Drawing.Size(78, 16);
             this.rdbCheckStructHeader.TabIndex = 12;
@@ -397,16 +398,17 @@
             // rdbCheckFunctionNames
             // 
             this.rdbCheckFunctionNames.AutoSize = true;
-            this.rdbCheckFunctionNames.Location = new System.Drawing.Point(6, 127);
+            this.rdbCheckFunctionNames.Location = new System.Drawing.Point(6, 276);
             this.rdbCheckFunctionNames.Name = "rdbCheckFunctionNames";
-            this.rdbCheckFunctionNames.Size = new System.Drawing.Size(89, 16);
+            this.rdbCheckFunctionNames.Size = new System.Drawing.Size(97, 16);
             this.rdbCheckFunctionNames.TabIndex = 7;
             this.rdbCheckFunctionNames.TabStop = true;
-            this.rdbCheckFunctionNames.Text = "Function names";
+            this.rdbCheckFunctionNames.Text = "Function contents";
             this.rdbCheckFunctionNames.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(this.lblFileDate);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.lblFilePath);
@@ -493,6 +495,44 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "File viewer";
             // 
+            // btnFindKeyClear
+            // 
+            this.btnFindKeyClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFindKeyClear.Location = new System.Drawing.Point(308, 509);
+            this.btnFindKeyClear.Name = "btnFindKeyClear";
+            this.btnFindKeyClear.Size = new System.Drawing.Size(75, 23);
+            this.btnFindKeyClear.TabIndex = 6;
+            this.btnFindKeyClear.Text = "Clear";
+            this.btnFindKeyClear.UseVisualStyleBackColor = true;
+            this.btnFindKeyClear.Click += new System.EventHandler(this.btnFindKeyClear_Click);
+            // 
+            // btnFileViewFind
+            // 
+            this.btnFileViewFind.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFileViewFind.Location = new System.Drawing.Point(215, 509);
+            this.btnFileViewFind.Name = "btnFileViewFind";
+            this.btnFileViewFind.Size = new System.Drawing.Size(75, 23);
+            this.btnFileViewFind.TabIndex = 5;
+            this.btnFileViewFind.Text = "Find";
+            this.btnFileViewFind.UseVisualStyleBackColor = true;
+            this.btnFileViewFind.Click += new System.EventHandler(this.btnFileViewFind_Click);
+            // 
+            // tbxFindKey
+            // 
+            this.tbxFindKey.Location = new System.Drawing.Point(43, 512);
+            this.tbxFindKey.Name = "tbxFindKey";
+            this.tbxFindKey.Size = new System.Drawing.Size(149, 20);
+            this.tbxFindKey.TabIndex = 4;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(7, 515);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(36, 13);
+            this.label8.TabIndex = 3;
+            this.label8.Text = "Word:";
+            // 
             // btnViewFileClear
             // 
             this.btnViewFileClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -525,6 +565,16 @@
             this.gbxViewFile.TabStop = false;
             this.gbxViewFile.Text = "View file";
             // 
+            // rtbViewFile
+            // 
+            this.rtbViewFile.BackColor = System.Drawing.Color.Gainsboro;
+            this.rtbViewFile.Location = new System.Drawing.Point(3, 19);
+            this.rtbViewFile.Name = "rtbViewFile";
+            this.rtbViewFile.ReadOnly = true;
+            this.rtbViewFile.Size = new System.Drawing.Size(857, 481);
+            this.rtbViewFile.TabIndex = 0;
+            this.rtbViewFile.Text = "";
+            // 
             // ofdOpenFile
             // 
             this.ofdOpenFile.FileName = "ofdOpenFile";
@@ -548,53 +598,16 @@
             this.lblAppStatus.TabIndex = 2;
             this.lblAppStatus.Text = ".";
             // 
-            // rtbViewFile
+            // button1
             // 
-            this.rtbViewFile.BackColor = System.Drawing.Color.Gainsboro;
-            this.rtbViewFile.Location = new System.Drawing.Point(3, 19);
-            this.rtbViewFile.Name = "rtbViewFile";
-            this.rtbViewFile.ReadOnly = true;
-            this.rtbViewFile.Size = new System.Drawing.Size(857, 481);
-            this.rtbViewFile.TabIndex = 0;
-            this.rtbViewFile.Text = "";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(7, 515);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(36, 13);
-            this.label8.TabIndex = 3;
-            this.label8.Text = "Word:";
-            // 
-            // tbxFindKey
-            // 
-            this.tbxFindKey.Location = new System.Drawing.Point(43, 512);
-            this.tbxFindKey.Name = "tbxFindKey";
-            this.tbxFindKey.Size = new System.Drawing.Size(149, 20);
-            this.tbxFindKey.TabIndex = 4;
-            // 
-            // btnFileViewFind
-            // 
-            this.btnFileViewFind.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFileViewFind.Location = new System.Drawing.Point(215, 509);
-            this.btnFileViewFind.Name = "btnFileViewFind";
-            this.btnFileViewFind.Size = new System.Drawing.Size(75, 23);
-            this.btnFileViewFind.TabIndex = 5;
-            this.btnFileViewFind.Text = "Find";
-            this.btnFileViewFind.UseVisualStyleBackColor = true;
-            this.btnFileViewFind.Click += new System.EventHandler(this.btnFileViewFind_Click);
-            // 
-            // btnFindKeyClear
-            // 
-            this.btnFindKeyClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFindKeyClear.Location = new System.Drawing.Point(308, 509);
-            this.btnFindKeyClear.Name = "btnFindKeyClear";
-            this.btnFindKeyClear.Size = new System.Drawing.Size(75, 23);
-            this.btnFindKeyClear.TabIndex = 6;
-            this.btnFindKeyClear.Text = "Clear";
-            this.btnFindKeyClear.UseVisualStyleBackColor = true;
-            this.btnFindKeyClear.Click += new System.EventHandler(this.btnFindKeyClear_Click);
+            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(165, 24);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(113, 23);
+            this.button1.TabIndex = 8;
+            this.button1.Text = "Open file in notepad++";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.OpenFileNotepadPlusPlus);
             // 
             // MainForm
             // 
@@ -646,7 +659,7 @@
         private System.Windows.Forms.RichTextBox rtbResDisplay;
         private System.Windows.Forms.RadioButton rdbCheckHeaderStructure;
         private System.Windows.Forms.RadioButton rdbCheckSourceStructure;
-        private System.Windows.Forms.RadioButton radioButton3;
+        private System.Windows.Forms.RadioButton rdbCheckSourceFileHeader;
         private System.Windows.Forms.RadioButton rdbCheckFunctionNames;
         private System.Windows.Forms.OpenFileDialog ofdOpenFile;
         private System.Windows.Forms.Label lblFileDate;
@@ -659,7 +672,7 @@
         private System.Windows.Forms.RadioButton rdbCheckGlobal;
         private System.Windows.Forms.RadioButton rdbCheckFunctionHeader;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.RadioButton radioButton8;
+        private System.Windows.Forms.RadioButton rdbCheckEnumHeader;
         private System.Windows.Forms.RadioButton rdbCheckStructHeader;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
@@ -675,6 +688,7 @@
         private System.Windows.Forms.TextBox tbxFindKey;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button btnFindKeyClear;
+        private System.Windows.Forms.Button button1;
     }
 }
 

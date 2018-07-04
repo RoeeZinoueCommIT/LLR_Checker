@@ -190,7 +190,6 @@ namespace LLLRC
         {
             @"/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INCLUDES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
             @"/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% DEFINES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
-            @"/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% STRUCTURES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
             @"/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TYPES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
             @"/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PUBLIC DECLARATIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
         };
@@ -211,9 +210,28 @@ namespace LLLRC
         };
         #endregion
 
+        #region Source file header fields
+
+        internal static List<string> SRC_FILE_HEADER_FILEDS = new List<string>()
+        {
+            @"\ingroup",
+            @"\brief",
+            @"\details",
+            @"\version",
+            @"\date",
+            @"\ModuleName",
+            @"\SDDLink",
+            @"\Module Classification The design is not classified",
+            @"\Inputs",
+            @"\Outputs",
+            @"\Timing",
+            @"\Logic"
+        };
+        #endregion
+
         #endregion
 
         internal static string SPACE_STR_KEY_WORD = "Str_val:";
-
+        internal static string EXEPTION_FIELD = "Expetion";
     }
 }
