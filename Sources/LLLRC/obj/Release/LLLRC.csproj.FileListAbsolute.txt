@@ -1,0 +1,9 @@
+C:\Software_projects\Elbit\MISRA\LLR_Checker\Sources\LLLRC\bin\Release\LLLRC.exe.config
+C:\Software_projects\Elbit\MISRA\LLR_Checker\Sources\LLLRC\obj\Release\LLLRC.csproj.ResolveComReference.cache
+C:\Software_projects\Elbit\MISRA\LLR_Checker\Sources\LLLRC\bin\Release\LLLRC.exe
+C:\Software_projects\Elbit\MISRA\LLR_Checker\Sources\LLLRC\bin\Release\LLLRC.pdb
+C:\Software_projects\Elbit\MISRA\LLR_Checker\Sources\LLLRC\obj\Release\LLLRC.MainForm.resources
+C:\Software_projects\Elbit\MISRA\LLR_Checker\Sources\LLLRC\obj\Release\LLLRC.Properties.Resources.resources
+C:\Software_projects\Elbit\MISRA\LLR_Checker\Sources\LLLRC\obj\Release\LLLRC.csproj.GenerateResource.Cache
+C:\Software_projects\Elbit\MISRA\LLR_Checker\Sources\LLLRC\obj\Release\LLLRC.exe
+C:\Software_projects\Elbit\MISRA\LLR_Checker\Sources\LLLRC\obj\Release\LLLRC.pdb

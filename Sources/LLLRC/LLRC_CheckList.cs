@@ -710,9 +710,73 @@ namespace LLLRC
             CheckBriefKey(_stream, startPos, endPos);
             CheckParamKey(_stream, startPos, endPos);
             CheckDeriveDesc(_stream, startPos, endPos);
+            CheckJustification(_stream, startPos, endPos);
             _res.Add(Environment.NewLine);
         }
 
+        private void CheckJustification(string[] _stream, int startPos, int endPos)
+        {
+            string word_val = string.Empty;
+            string[] word_container;
+            bool found_brief_line = false, found_frs_line = false;
+            string justSentence = string.Empty;
+
+            foreach (var field in _headerReadFields)
+            {
+                if (true == field.Contains(@"\brief Local function"))
+                {
+                    found_brief_line = true;
+                    break;
+                }
+            }
+
+            foreach (var field in _headerReadFields)
+            {
+                if (true == field.Contains(@"AHRS_GEN_SDD_1453"))
+                {
+                    found_frs_line = true;
+                    break;
+                }
+            }
+
+            if(true == found_brief_line && false == found_frs_line)
+            {
+                _res.Add(string.Format("Local function found. missing correct FRS_LINK"));
+                return;
+            }
+            else if (false == found_brief_line && true == found_frs_line)
+            {
+                _res.Add(string.Format("FRS_LINK of local function found. Missing correct delceartion in brief"));
+                return;
+            }
+
+            // If all good so far lets check justification content words
+            else if (true == found_brief_line && true == found_frs_line)
+            {
+                foreach (var field in _headerReadFields)
+                {
+                    // Collect justification senetence
+                    if (true == field.Contains(@"\Justification"))
+                    {
+                        word_container = field.Split(new string[] { @"\Justification" }, StringSplitOptions.None);
+                        foreach (var item in word_container)
+                        {
+                            if(item != string.Empty)
+                            {
+                                justSentence = item;
+                            }
+                        }
+                    }
+                }
+
+                // Check justification sentence
+                if (false == justSentence.Contains("This function need"))
+                {
+                    _res.Add(string.Format("Justification sentence must start with: This function need"));
+                }
+
+            }
+        }
         private void CheckFrsLinkField(string[] _stream, int startPos, int endPos)
         {
             string word_val = string.Empty;
