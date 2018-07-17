@@ -101,6 +101,7 @@ namespace LLLRC
                     }
                 }
             }
+
             return _res;
         }
 
@@ -124,9 +125,7 @@ namespace LLLRC
                                                             ref nullArgmnt, ref nullArgmnt, ref nullArgmnt,
                                                             ref nullArgmnt, ref nullArgmnt, ref nullArgmnt);
         }
-
-
-
+        
         #endregion
 
         #region Check spaces
@@ -142,8 +141,8 @@ namespace LLLRC
                 MatchCollection matches = Regex.Matches(_stream[idx], "(\\s+)");
                 int[] spaceArray = matches.OfType<Match>().Select(m => m.Length).ToArray();
 
-                spacePos = CheckSpaces(spaceArray);
-                if (spacePos >= 0 )
+                spacePos = CheckSpaces(spaceArray, 1, LLRC_Common.ALLOWED_BIG_SPACE_NUM);
+                if (spacePos >= 0)
                 {
                     _res.Add(string.Format("Line: {0}" + Environment.NewLine + "Pos: {1}" + Environment.NewLine + LLRC_Common.SPACE_STR_KEY_WORD + "{2}" + Environment.NewLine, idx + 1, spacePos, _stream[idx]));
                 }
@@ -151,11 +150,11 @@ namespace LLLRC
             return _res;
         }
 
-        private int CheckSpaces(int[] spaceArray)
+        private int CheckSpaces(int[] spaceArray, int min_space_size, int max_space_size)
         {
             for (int idx = 1; idx < spaceArray.Length; idx++)
             {
-                if (spaceArray[idx] > 1)
+                if ((spaceArray[idx] > min_space_size) && (spaceArray[idx] < max_space_size))
                 {
                     return idx;
                 }
@@ -319,6 +318,19 @@ namespace LLLRC
             }
         }
 
+        internal List<string> GrammerGetAllowedWords(string[] lines)
+        {
+            _res.Clear();
+
+            _res.Add("Pavel allowed words");
+
+            foreach (var word in LLRC_Common.ALLOWED_WORDS)
+            {
+                _res.Add(word);
+            }
+            return (_res);
+        }
+
         #endregion
 
         #region Check not use in Elbit types
@@ -432,7 +444,7 @@ namespace LLLRC
         private void CheckStructObject(string[] _stream, string moduleName, int startPos, int endPos)
         {
             _objectVerbInfo.Clear();
-            GetObjectVerbsInfo(_stream, startPos + 1, endPos + 1);
+            GetObjectVerbsInfo(_stream, startPos + 1, endPos + 1, true);
             CheckHeaderFields(_stream, "Structure", LLRC_Common.STRUCTURE_FIELDS, startPos, endPos);
             AnlyzeStructMember(_stream, startPos, endPos, moduleName);
 
@@ -585,6 +597,7 @@ namespace LLLRC
         {
             string fieldDefine = string.Empty;
             string fieldHeader = string.Empty;
+            string decValue = string.Empty;
 
             // Check name
             fieldDefine = _objectVerbInfo[1].Trim();
@@ -596,13 +609,37 @@ namespace LLLRC
                     _res.Add(string.Format("Define name in decleration {0} don`t match name in header: {1}", fieldDefine, fieldHeader));
                 }
             }
-
-            // Check define value
-            fieldDefine = _objectVerbInfo[2].Trim();
-            fieldHeader = _headerReadFields[3].Split(':')[1].Trim();
-            if (false == fieldDefine.Contains(fieldHeader))
+            else
             {
-                _res.Add(string.Format("Define value in decleration {0} don`t match value in header: {1}", fieldDefine, fieldHeader));
+                _res.Add(string.Format("Define name must start with prefix C_. Define name: ({0})", fieldDefine));
+            }
+
+            // build decleration value:
+            if(_objectVerbInfo.Count >= 3)
+            {
+                if (_objectVerbInfo.Count > 4)
+                {
+                    for (int idx = 2; idx < _objectVerbInfo.Count; idx++)
+                    {
+                        decValue += _objectVerbInfo[idx];
+                    }
+                }
+                else
+                {
+                    decValue = _objectVerbInfo[2].Trim();
+                }
+
+                fieldDefine = decValue.Split(new string[] { @"/*" }, StringSplitOptions.None)[0].Split(new string[] { @"//" }, StringSplitOptions.None)[0];
+
+                if(fieldDefine == string.Empty)
+                {
+
+                }
+                fieldHeader = _headerReadFields[3].Split(':')[1].Replace(" ", string.Empty);
+                if (false == fieldDefine.Contains(fieldHeader))
+                {
+                    _res.Add(string.Format("Define value in decleration {0} don`t match value in header: {1}", fieldDefine, fieldHeader));
+                }
             }
         }
         #endregion
@@ -708,10 +745,99 @@ namespace LLLRC
             CheckInGroupKey(_stream, startPos, endPos, moduleName);
             CheckFrsLinkField(_stream, startPos, endPos);
             CheckBriefKey(_stream, startPos, endPos);
-            CheckParamKey(_stream, startPos, endPos);
             CheckDeriveDesc(_stream, startPos, endPos);
             CheckJustification(_stream, startPos, endPos);
+            CheckParamRange(_stream, startPos, endPos);
+            CheckParamVeriable(_stream, startPos, endPos);
+
             _res.Add(Environment.NewLine);
+        }
+
+        private void CheckParamVeriable(string[] _stream, int startPos, int endPos)
+        {
+            int lineIdx = 0, tempRun = 0;
+            string[] functions_inputs_verbs = new string[10];
+            string header_inputs_verbs = string.Empty;
+            string header_mem_type = string.Empty, header_mem_desc = string.Empty, tempStr = string.Empty;
+
+            // Get verbs from function decleration:
+            while (_stream[endPos + lineIdx + 1] == string.Empty)
+            {
+                _res.Add(string.Format("There is empty line at position ({0}", endPos + lineIdx + 1));
+                lineIdx++;
+            }
+
+            if(true == _stream[endPos + lineIdx + 1].Contains(")")) // All function deleration is in one line
+            {
+                functions_inputs_verbs = _stream[endPos + lineIdx + 1].Split('(')[1].Split(')')[0].Split(',');
+            }
+            else
+            {
+                while(false == tempStr.Contains(")"))
+                {
+                    tempStr = _stream[endPos + lineIdx++ + 2].Split(',')[0];
+                    if ((false == tempStr.Contains("(")) && (false == tempStr.Contains(")")))
+                    {
+                        if(tempStr.Split(',')[0].Contains("\t"))
+                        {
+                            _res.Add(string.Format("There is a tab \t at line: ({0}) ", tempStr.Split(',')[0]));
+                            functions_inputs_verbs[tempRun++] = tempStr.Split(',')[0].Replace("\t",string.Empty).Split('/')[0].TrimStart().TrimEnd();
+                        }
+                        else
+                        {
+                            functions_inputs_verbs[tempRun++] = tempStr.Split(',')[0];
+                        }
+                        
+                    }
+                    
+
+
+                }
+            }
+
+
+
+            // Get verbs from function header:
+            lineIdx = 0;
+
+            while (false == _stream[startPos + lineIdx].Contains(@"\param"))
+            {
+                lineIdx++;
+            }
+
+            while (false == _stream[startPos + lineIdx].Contains(@"*/"))
+            {
+                if (false == _stream[startPos + lineIdx].Contains("range:"))
+                {
+                    if(true == _stream[startPos + lineIdx].Contains(@"\param"))
+                    {
+                        tempStr = _stream[startPos + lineIdx].Split(new string[] { @"\param" }, StringSplitOptions.None)[1];
+                    }
+                    else
+                    {
+                        tempStr = _stream[startPos + lineIdx];
+                    }
+                    header_mem_type = tempStr.Split('-')[0].Replace(".", string.Empty) + " ";
+                    //header_mem_desc = tempStr.Split('-')[1].Replace(".", string.Empty) + " ";
+
+                    //if (header_mem_desc == string.Empty)
+                    //{
+                    //    _res.Add(string.Format("Missing header data description. at line ({0})", tempStr));
+                    //}
+
+                    header_inputs_verbs += header_mem_type;
+
+                }
+                lineIdx++;
+            }
+
+            for (int idx = 0; idx < tempRun; idx++)
+            {
+                if (false == header_inputs_verbs.TrimEnd().Contains(functions_inputs_verbs[idx]))
+                {
+                    _res.Add(string.Format("Missing match between \nMember in header ({0}) \nMember in function prototype ({1})", header_inputs_verbs, functions_inputs_verbs[idx]));
+                }
+            }
         }
 
         private void CheckJustification(string[] _stream, int startPos, int endPos)
@@ -739,7 +865,7 @@ namespace LLLRC
                 }
             }
 
-            if(true == found_brief_line && false == found_frs_line)
+            if (true == found_brief_line && false == found_frs_line)
             {
                 _res.Add(string.Format("Local function found. missing correct FRS_LINK"));
                 return;
@@ -750,31 +876,38 @@ namespace LLLRC
                 return;
             }
 
-            // If all good so far lets check justification content words
-            else if (true == found_brief_line && true == found_frs_line)
+            // Collect justification senetence
+            foreach (var field in _headerReadFields)
             {
-                foreach (var field in _headerReadFields)
+                if (true == field.Contains(@"\Justification"))
                 {
-                    // Collect justification senetence
-                    if (true == field.Contains(@"\Justification"))
+                    word_container = field.Split(new string[] { @"\Justification" }, StringSplitOptions.None);
+                    foreach (var item in word_container)
                     {
-                        word_container = field.Split(new string[] { @"\Justification" }, StringSplitOptions.None);
-                        foreach (var item in word_container)
+                        if (item != string.Empty)
                         {
-                            if(item != string.Empty)
-                            {
-                                justSentence = item;
-                            }
+                            justSentence = item;
                         }
                     }
                 }
+            }
 
+            // If all good so far lets check justification content words
+            if (true == found_brief_line && true == found_frs_line)
+            {
                 // Check justification sentence
                 if (false == justSentence.Contains("This function need"))
                 {
                     _res.Add(string.Format("Justification sentence must start with: This function need"));
                 }
-
+            }
+            else if (false == found_brief_line && false == found_frs_line)
+            {
+                // Check justification sentence
+                if (false == justSentence.Contains(@"N/A"))
+                {
+                    _res.Add(string.Format(@"Justification sentence of not derive function is N/A"));
+                }
             }
         }
         private void CheckFrsLinkField(string[] _stream, int startPos, int endPos)
@@ -819,7 +952,7 @@ namespace LLLRC
             _res.Add(string.Format("FRS_common issue. word: ({0}) is not valid. If it general please write AHRS_GEN_SDD_1453", word_val));
         }
 
-        private void CheckParamKey(string[] _stream, int startLine, int stopLine)
+        private void CheckParamRange(string[] _stream, int startLine, int stopLine)
         {
             string paramWord = string.Empty;
             bool foundFlag = false;
@@ -948,16 +1081,17 @@ namespace LLLRC
         private void CheckFunctionContents(string[] _stream, string moduleName, int startPos, int endPos)
         {
             // Check function validty name
-            checkFunctionsName(_stream, moduleName, startPos - 1, false);
+            if(true == checkFunctionsName(_stream, moduleName, startPos - 1, false))
+            {
+                // Check functions inputs and return statement
+                FunctionCheckReturnAndInputs(_stream, startPos, endPos);
 
-            // Check functions inputs and return statement
-            FunctionCheckReturnAndInputs(_stream, startPos, endPos);
-
-            // Space between block
-            _res.Add(Environment.NewLine);
+                // Space between block
+                _res.Add(Environment.NewLine);
+            }
         }
 
-        private void checkFunctionsName(string[] _stream, string moduleName, int startPos, bool functionNameOnly)
+        private bool checkFunctionsName(string[] _stream, string moduleName, int startPos, bool functionNameOnly)
         {
             string[] funcNameContainer;
             bool isEmptyRow = false;
@@ -975,14 +1109,25 @@ namespace LLLRC
             string funcName = string.Empty;
 
             // Print function name
+            if (true == funcNameContainer[0].Contains("typedef"))
+            {
+                return false;
+            }
 
-            if (true == funcNameContainer[0].Contains("static"))
+            else if (true == funcNameContainer[0].Contains("static"))
             {
                 funcName = funcNameContainer[2].Split('(')[0];
             }
             else
             {
-                funcName = funcNameContainer[1].Split('(')[0];
+                if(funcNameContainer.Length < 2)
+                {
+                    return false;
+                }
+                else if (true == funcNameContainer[1].Contains(moduleName))
+                {
+                    funcName = funcNameContainer[1].Split('(')[0];
+                }
             }
             
             _res.Add(string.Format("Function name: {0} \nstart pos: {1}", funcName, startPos));
@@ -1007,6 +1152,8 @@ namespace LLLRC
                     _res.Add(string.Format("Issue: Don`t find prefix (p_) in function name ({0}) \n", funcName));
                 }
             }
+
+            return (true);
         }
 
         private void FunctionCheckReturnAndInputs(string[] _stream, int startPos, int endPos)
@@ -1092,23 +1239,38 @@ namespace LLLRC
 
         private void CheckAndPrintGlobalFields(string moduleName, int startPos, int endPos)
         {
+            string globalName = string.Empty;
+
             // Check static field:
             if(_objectVerbInfo[0] != "static")
             {
-                _res.Add(string.Format("Global name: {0}", _objectVerbInfo[1].Split('[')[0].Replace(';', ' ').Trim()));
+                globalName = _objectVerbInfo[1].Split('[')[0].Replace(';', ' ').Trim();
+                _res.Add(string.Format("Global name: {0}", globalName));
                 _res.Add(string.Format("Static field is missing"));
             }
             else
             {
-                _res.Add(string.Format("Global name: {0}", _objectVerbInfo[2].Split('[')[0].Replace(';', ' ').Trim()));
+                if (_objectVerbInfo[1] == "const" || _objectVerbInfo[1] == "struct" || _objectVerbInfo[1] == "SEM_ID")
+                {
+                    globalName = _objectVerbInfo[3].Split('[')[0].Replace(';', ' ').Trim();
+                    _res.Add(string.Format("Global name: {0}", globalName));
+
+                }
+                else
+                {
+                    globalName = _objectVerbInfo[2].Split('[')[0].Replace(';', ' ').Trim();
+                    _res.Add(string.Format("Global name: {0}", globalName));
+
+                }
+                    
             }
             
             
             // Check global name:
-            CheckVeriableNameLine(_stream, moduleName, endPos);
+            CheckVeriableNameLine(_stream, moduleName, globalName,  endPos);
             
             // Check with functions use this global:
-            CheckGlobalUsedByRow(_stream, _objectVerbInfo[2]);
+            CheckGlobalUsedByRow(_stream, globalName);
 
             // Check math in assignment field:
             CheckGlobalAssignmentField(_stream, endPos + 1);
@@ -1226,7 +1388,7 @@ namespace LLLRC
             
         }
 
-        private bool GetObjectVerbsInfo(string[] _stream, int startPos, int endPos)
+        private bool GetObjectVerbsInfo(string[] _stream, int startPos, int endPos, bool getRows = false)
         {
             bool ret = true;
             int linePos = startPos;
@@ -1240,12 +1402,19 @@ namespace LLLRC
             {
                 while((_stream[linePos] != string.Empty) /*&& (linePos < endPos)*/ )
                 {
-                    var collection = _stream[linePos].Split();
-                    foreach (var item in collection)
+                    if(true == getRows)
                     {
-                        if (item != string.Empty)
+                        _objectVerbInfo.Add(_stream[linePos]);
+                    }
+                    else
+                    {
+                        var collection = _stream[linePos].Split();
+                        foreach (var item in collection)
                         {
-                            _objectVerbInfo.Add(item);
+                            if (item != string.Empty)
+                            {
+                                _objectVerbInfo.Add(item);
+                            }
                         }
                     }
                     linePos++;
@@ -1262,16 +1431,16 @@ namespace LLLRC
             }
         }
        
-        private void CheckVeriableNameLine(string[] _stream, string moduleName, int globalPos)
+        private void CheckVeriableNameLine(string[] _stream, string moduleName,string globalName,  int globalPos)
         {
             string defineGlobalName = string.Empty, headerGlobalName = string.Empty; 
             //int idx = startLine;
 
-            // Check global veriable name math rules:
+            // Check global veriable name match rules:
             string nameShape = string.Format("g_{0}", moduleName);
-            var nameArray = _objectVerbInfo[2].Split('[')[0].Split(';')[0].Split('_');
+            var nameArray = globalName.Split('_');
 
-            if ((false == _objectVerbInfo[2].Contains(nameShape)) && (false == _objectVerbInfo[3].Contains(nameShape)))
+            if ((false == globalName.Contains(nameShape)) && (false == _objectVerbInfo[3].Contains(nameShape)))
             {
                 _res.Add(string.Format("Global veriable name ({0}) dont match module name ({1}). pos: {0}", _objectVerbInfo[2], moduleName));
             }
@@ -1291,10 +1460,9 @@ namespace LLLRC
 
             // Check if global name in header match global name veriable: 
             headerGlobalName = _headerReadFields[1].Split(':')[1].Trim();
-            defineGlobalName = _objectVerbInfo[2].Split('[')[0].Replace(";",string.Empty).Trim();
+            defineGlobalName = globalName;
             if (headerGlobalName != defineGlobalName)
             {
-                defineGlobalName = _objectVerbInfo[1].Split('[')[0].Trim();
                 if (headerGlobalName == defineGlobalName)
                 {
                     _res.Add(string.Format("Global name match veriable name in header, but missing static field, pos: {0}", globalPos));
@@ -1412,7 +1580,7 @@ namespace LLLRC
 
         private string GetModuleName(string _filePath)
         {
-            return Path.GetFileName(_filePath).Split('_')[0].Split('.')[0];
+            return Path.GetFileName(_filePath).Split('_')[0].Split('.')[0].ToUpper();
         }
         #endregion
 

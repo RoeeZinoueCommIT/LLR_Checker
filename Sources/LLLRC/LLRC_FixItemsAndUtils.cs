@@ -69,7 +69,7 @@ namespace LLLRC
             string[] newLineArray;
             string newLine = string.Empty;
 
-            for (int idx = 0; idx < linesToFix.Length - 4; idx += 4)
+            for (int idx = 0; idx <= linesToFix.Length - 4; idx += 4)
             {
                 newLine = string.Empty;
                 linePos = Int32.Parse(linesToFix[idx].Split(':')[1]);

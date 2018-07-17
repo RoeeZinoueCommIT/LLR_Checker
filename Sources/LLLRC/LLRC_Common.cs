@@ -8,7 +8,7 @@ namespace LLLRC
 {
     class LLRC_Common
     {
-        internal static int ALLOWED_BIG_SPACE_NUM = 2;
+        internal static int ALLOWED_BIG_SPACE_NUM = 4;
 
         #region Application message
 
@@ -66,8 +66,6 @@ namespace LLLRC
             "int16",
             "UINT8",
             "UINT16",
-            "bool",
-            "uint32_t",
         };
         #endregion
 
@@ -122,6 +120,17 @@ namespace LLLRC
             "vert", /*Vertical*/
             "rad", /*Radian*/
             "deg", /*Degree*/
+
+            /* C common words */
+            "typedef",
+            "struct",
+            "Struct",
+            "memset",
+            "memcpy",
+            "prescaler",
+            "Autoreload",
+            "MHz",
+            "Ethernet"
         };
         #endregion
         #endregion
@@ -191,6 +200,8 @@ namespace LLLRC
             @"/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INCLUDES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
             @"/* %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% DEFINES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
             @"/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TYPES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
+            @"/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ENUMS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
+            @"/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% STRUCTURES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
             @"/*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PUBLIC DECLARATIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% */",
         };
         #endregion

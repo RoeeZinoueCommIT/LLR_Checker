@@ -213,6 +213,12 @@ namespace LLLRC
                 rtbResDisplay.Lines = _checkList.GrammerRemoveDifrances(rtbResDisplay.Lines).ToArray();
                 isGeneralSubject = true;
             }
+            else if(true == rdbCheckGrammerAllowedWords.Checked)
+            {
+                rtbResDisplay.Lines = _checkList.CheckGrammer(_filePath).ToArray();
+                rtbResDisplay.Lines = _checkList.GrammerGetAllowedWords(rtbResDisplay.Lines).ToArray();
+                isGeneralSubject = true;
+            }
             else if (true == rdbCheckElbitTypes.Checked)
             {
                 rtbResDisplay.Lines = _checkList.CheckTypes(_filePath).ToArray();
